@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'oauth2_provider',
-    'users'
-
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +83,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD':'P@$$w0rd',
         'HOST':'db',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
