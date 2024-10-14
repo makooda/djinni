@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: universe_users
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: P@$$w0rd
+    ports:
+      - "5432:5433"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+
+  user-management:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python src/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
