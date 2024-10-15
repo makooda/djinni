@@ -19,11 +19,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python src/manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     depends_on:
       - db
+    environment:
+      - DATABASE_URL=postgres://postgres:P@$$w0rd@db:5432/universe_users
       - redis
     volumes:
       - .:/app

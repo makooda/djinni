@@ -21,4 +21,4 @@ COPY src/ .
 EXPOSE 8000
 
 # Run the Django application
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["./wait-for-it.sh", "db:5432", "--", "python", "src/manage.py", "runserver", "0.0.0.0:8000"]
