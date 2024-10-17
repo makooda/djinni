@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),  # Add login/logout views for the browsable API
     path('api/', include('users.urls')),  # Add user management APIs
 ]

@@ -12,13 +12,14 @@ WORKDIR /app
 
 # Install dependencies
 COPY requirements.txt .
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the application code
 COPY src/ .
+COPY .env .env
 
 # Expose the port for Django
 EXPOSE 8000
 
 # Run the Django application
-CMD ["./wait-for-it.sh", "db:5432", "--", "python", "src/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["./wait-for-it.sh", "db:5432", "--", "sh", "-c", "python src/manage.py migrate && python src/create_oauth_app.py && python src/manage.py runserver 0.0.0.0:8000"]

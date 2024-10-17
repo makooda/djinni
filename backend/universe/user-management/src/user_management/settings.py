@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load the environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'oauth2_provider',
     'users',
 ]
@@ -79,11 +85,11 @@ WSGI_APPLICATION = 'user_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'universe_users',
-        'USER': 'postgres',
-        'PASSWORD':'P@$$w0rd',
-        'HOST':'db',
-        'PORT': '5432',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': 'P#$$w0rd',
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
 
@@ -132,14 +138,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #OAuth2 settings
 OAUTH2_PROVIDER = {
-'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
-'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,
+        'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+        'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,
+        'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+    },
+    'AUTHORIZATION_CODE_EXPIRE_SECONDS': 600,
+    'ALLOWED_GRANT_TYPES': [
+        'password',
+        'client_credentials',
+    ],
 }
 
 #Django REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES':(
         'rest_framework.permissions.IsAuthenticated',
@@ -156,3 +172,7 @@ CACHES={
         }
     }
 }
+
+# OAuth2 settings
+OAUTH_CLIENT_ID = os.getenv('OAUTH_CLIENT_ID')
+OAUTH_CLIENT_SECRET = os.getenv('OAUTH_CLIENT_SECRET')

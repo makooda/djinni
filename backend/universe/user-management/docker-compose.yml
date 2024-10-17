@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:13
     environment:
-      - POSTGRES_DB=universe_users
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=P@$$w0rd
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -19,12 +19,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=user_management.settings
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgres://postgres:P@$$w0rd@db:5432/universe_users
+      - db    
       - redis
     volumes:
       - .:/app
