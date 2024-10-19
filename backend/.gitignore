@@ -1,2 +1,3 @@
-postgres_data/
+./postgres_data
 .env
+.user-management/src/user_management/__pychche__
