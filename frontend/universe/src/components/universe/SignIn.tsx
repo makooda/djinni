@@ -1,22 +1,18 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import ForgotPassword from './ForgotPassword';
-import { GoogleIcon, FacebookIcon, SitemarkIcon, PadlockIcon } from './CustomIcons';
+import { PadlockIcon } from './CustomIcons';
 import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
+import axios from 'axios';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -60,47 +56,27 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
+  
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    if (passwordError) {
       event.preventDefault();
       return;
     }
+
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
+      username: data.get('username'),
       password: data.get('password'),
     });
+
+    event.preventDefault();
   };
 
   const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
-
     let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
@@ -150,21 +126,21 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">Username</FormLabel>
               <TextField
-                error={emailError}
-                helperText={emailErrorMessage}
-                id="email"
-                type="email"
-                name="email"
-                placeholder="your@email.com"
+                /*error={emailError}
+                helperText={emailErrorMessage}*/
+                id="username"
+                type="text"
+                name="username"
+                placeholder="johndoe"
                 autoComplete="email"
                 autoFocus
                 required
                 fullWidth
                 variant="outlined"
-                color={emailError ? 'error' : 'primary'}
-                sx={{ ariaLabel: 'email' }}
+                /*color={emailError ? 'error' : 'primary'}*/
+                sx={{ ariaLabel: 'usrname' }}
               />
             </FormControl>
             <FormControl>
