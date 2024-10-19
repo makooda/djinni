@@ -58,6 +58,9 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+
+  const [UnauthorisedError, setUnauthorisedError] = React.useState(false);
+  const [UnauthorisedErrorrMessage, setUnauthorisedErrorrMessage] = React.useState('');
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     if (passwordError) {
@@ -145,17 +148,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControl>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                {/*<Link
-                  component="button"
-                  type="button"
-                  onClick={handleClickOpen}
-                  variant="body2"
-                  sx={{ alignSelf: 'baseline' }}
-                >
-                  Forgot your password?
-                </Link> */}
+                <FormLabel htmlFor="password">Password</FormLabel>                
               </Box>
+              
               <TextField
                 error={passwordError}
                 helperText={passwordErrorMessage}
