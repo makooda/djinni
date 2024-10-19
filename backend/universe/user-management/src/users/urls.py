@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
-from .views import CustomTokenView
+from .view_classes.custom_token_view import CustomTokenView
+
 
 urlpatterns = [
     path('register/', views.register, name='register'),
