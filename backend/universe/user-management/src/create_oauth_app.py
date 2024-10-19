@@ -4,15 +4,14 @@ from dotenv import load_dotenv
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ImproperlyConfigured
-from django.core.wsgi import get_wsgi_application
+#from django.core.wsgi import get_wsgi_application
 
 
 # Load the environment variables from .env file
 load_dotenv()
 
-
 # Get the WSGI application
-application = get_wsgi_application()
+#application = get_wsgi_application()
 
 
 # Initialize Django
@@ -42,7 +41,7 @@ if not Application.objects.filter(name="LegacyOAuth2App").exists():
         client_id=client_id,
         client_secret=client_secret,
         client_type=Application.CLIENT_CONFIDENTIAL,
-        authorization_grant_type=Application.GRANT_CLIENT_CREDENTIALS,
+        authorization_grant_type=Application.GRANT_PASSWORD,
         user=admin_user,
     )
     app.save()

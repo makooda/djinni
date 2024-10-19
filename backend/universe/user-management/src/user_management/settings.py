@@ -138,17 +138,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #OAuth2 settings
 OAUTH2_PROVIDER = {
-        'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+        'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
         'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,
         'SCOPES': {
         'read': 'Read scope',
         'write': 'Write scope',
     },
     'AUTHORIZATION_CODE_EXPIRE_SECONDS': 600,
-    'ALLOWED_GRANT_TYPES': [
-        'password',
-        'client_credentials',
-    ],
+    'GRANT_TYPES': {
+        'authorization_code': 'Authorization code grant',
+        'password': 'Resource owner password-based grant',
+        'client_credentials': 'Client credentials grant',
+        'refresh_token': 'Refresh token grant',
+    },
 }
 
 #Django REST Framework settings
