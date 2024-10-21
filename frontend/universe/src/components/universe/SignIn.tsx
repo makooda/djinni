@@ -56,6 +56,14 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
+  React.useEffect(() => {
+    document.title = ' Universe | Sigin In';
+  }, []);
+
+  const [username, setUsername] = React.useState('');
+  const [usernameError, setUsernameError] = React.useState(false);
+  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
+
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
 
@@ -63,6 +71,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [UnauthorisedErrorrMessage, setUnauthorisedErrorrMessage] = React.useState('');
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if (passwordError) {
       event.preventDefault();
       return;
@@ -74,19 +84,57 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       password: data.get('password'),
     });
 
+    const loginData = {
+      username: data.get('username'),
+      password: data.get('password')
+    }
+
+    try{
+      const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL
+      const signinEndpoint = 'api/signin/';
+      
+      const response = await axios.post(`${userServiceBaseUrl}${signinEndpoint}`, loginData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      //set unauthorised error to false and clear the message
+      setUnauthorisedError(false);
+      setUnauthorisedErrorrMessage('');
+      console.log(response);
+      
+      //set the token in the local storage
+      //perform redirection to the dashboard
+
+    }catch(error){
+      console.log(error);
+      setUnauthorisedError(true);
+      setUnauthorisedErrorrMessage('Un-Authorised User, Try Again');
+    }
+
+
     event.preventDefault();
   };
 
   const validateInputs = () => {
     const password = document.getElementById('password') as HTMLInputElement;
+    const username = document.getElementById('username') as HTMLInputElement;
+
     let isValid = true;
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
       isValid = false;
-    } else {
+    }else if(!username.value){
+      setUsernameError(true);
+      setUsernameErrorMessage('Username is required.');
+      isValid = false;
+    }else {
       setPasswordError(false);
       setPasswordErrorMessage('');
+
+      setUsernameError(false);
+      setUsernameErrorMessage('');
     }
 
     return isValid;
@@ -117,9 +165,21 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             >
             Access The Universe
             </Typography>
+
+            {UnauthorisedError && (
+              <Typography
+                variant="body2"
+                color="error"
+                sx={{ textAlign: 'center' }}
+              >
+                {UnauthorisedErrorrMessage}
+              </Typography>
+            )}
+
           <Box
             component="form"
             onSubmit={handleSubmit}
+            method="POST"
             noValidate
             sx={{
               display: 'flex',
@@ -129,16 +189,18 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Username</FormLabel>
+              <FormLabel htmlFor="username">Username*</FormLabel>
               <TextField
-                /*error={emailError}
-                helperText={emailErrorMessage}*/
+                error={usernameError}
+                helperText={usernameErrorMessage}
                 id="username"
                 type="text"
                 name="username"
                 placeholder="johndoe"
-                autoComplete="email"
+                autoComplete="username"
                 autoFocus
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 fullWidth
                 variant="outlined"
@@ -148,7 +210,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControl>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <FormLabel htmlFor="password">Password</FormLabel>                
+                <FormLabel htmlFor="password">Password*</FormLabel>                
               </Box>
               
               <TextField
@@ -165,12 +227,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 variant="outlined"
                 color={passwordError ? 'error' : 'primary'}
               />
-            </FormControl>
-            {/*<FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <ForgotPassword open={open} handleClose={handleClose} />*/}
+            </FormControl>            
             <Button
               type="submit"
               fullWidth
@@ -178,39 +235,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               onClick={validateInputs}
             >
               Sign in
-            </Button>
-            {/*<Typography sx={{ textAlign: 'center' }}>
-              Don&apos;t have an account?{' '}
-              <span>
-                <Link
-                  href="/material-ui/getting-started/templates/sign-in/"
-                  variant="body2"
-                  sx={{ alignSelf: 'center' }}
-                >
-                  Sign up
-                </Link>
-              </span>
-            </Typography>*/}
-          </Box>
-          {/*<Divider>or</Divider>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign in with Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign in with Facebook
-            </Button>
-          </Box>*/}
+            </Button>            
+          </Box>          
         </Card>
         </Box>
       </SignInContainer>
