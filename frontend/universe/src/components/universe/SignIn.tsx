@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDom from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -59,6 +60,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   React.useEffect(() => {
     document.title = ' Universe | Sigin In';
   }, []);
+  const navigate = ReactDom.useNavigate();
 
   const [username, setUsername] = React.useState('');
   const [usernameError, setUsernameError] = React.useState(false);
@@ -78,16 +80,13 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       return;
     }
 
+    
     const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      password: data.get('password'),
-    });
-
     const loginData = {
       username: data.get('username'),
       password: data.get('password')
     }
+    console.log(loginData);   
 
     try{
       const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL
@@ -101,10 +100,15 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       //set unauthorised error to false and clear the message
       setUnauthorisedError(false);
       setUnauthorisedErrorrMessage('');
-      console.log(response);
+      //console.log(response);
       
+      const { access_token, refresh_token } = response.data as { access_token: string; refresh_token: string };
       //set the token in the local storage
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+      
       //perform redirection to the dashboard
+      navigate('/universe/dashboard');
 
     }catch(error){
       console.log(error);

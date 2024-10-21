@@ -14,9 +14,13 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
 
-import { AppProvider } from '@toolpad/core/AppProvider';
+import {
+  AppProvider,
+  type Session,
+  type Navigation,
+} from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import type { Navigation, Router } from '@toolpad/core';
+import type { Router } from '@toolpad/core';
 
 
 //Navigations
@@ -120,11 +124,39 @@ function Search() {
   );
 }
 
-
-
 export default function DashboardLayoutSlots() {
- 
+  React.useEffect(() => {
+    document.title = ' Universe | Workspace';
+  }, []);
 
+  // Load session data from localStorage when the component first mounts
+  const [session, setSession] = React.useState<Session | null>(() => {
+  const storedSession = localStorage.getItem('session');
+    return storedSession ? JSON.parse(storedSession) : null;
+  });
+
+  const authentication = React.useMemo(() => {
+    return {
+      signIn: () => {
+        setSession({
+          user: {
+            name: 'Bharat Kashyap',
+            email: 'bharatkashyap@outlook.com',
+            image: 'https://avatars.githubusercontent.com/u/19550456',
+          },
+        });
+      },
+      signOut: () => {
+        // Clear the session details from both state and localStorage
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        setSession(null);
+        localStorage.removeItem('session');
+        console.log('User logged out');  
+        window.location.href = '/universe/signin';
+      },
+    };
+  }, []);
   const [pathname, setPathname] = React.useState('/dashboard');
 
   const router = React.useMemo<Router>(() => {
@@ -139,10 +171,11 @@ export default function DashboardLayoutSlots() {
 
   return (
     <AppProvider
+      session={session}
+      authentication={authentication}
       navigation={NAVIGATION}
-      branding={{
-        logo: <img src="https://mui.com/static/logo.png" alt="The Universe logo" />,
-        title: 'Universe  [Organization]',        
+      branding={{        
+        title: 'Universe',        
       }}
       router={router}
       theme={theme}
