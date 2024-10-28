@@ -1,39 +1,43 @@
 import * as React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import type { ThemeOptions } from '@mui/material/styles';
-import { inputsCustomizations } from './customizations/inputs';
-import { dataDisplayCustomizations } from './customizations/dataDisplay';
-import { feedbackCustomizations } from './customizations/feedback';
-import { navigationCustomizations } from './customizations/navigation';
-import { surfacesCustomizations } from './customizations/surfaces';
+import { inputsCustomizations } from '../customizations/inputs';
+import { dataDisplayCustomizations } from '../customizations/dataDisplay';
+import { feedbackCustomizations } from '../customizations/feedback';
+import { navigationCustomizations } from '../customizations/navigation';
+import { surfacesCustomizations } from '../customizations/surfaces';
 import { colorSchemes, typography, shadows, shape } from './themePrimitives';
 
 interface AppThemeProps {
+  mode: 'light' | 'dark' | 'system'; // Added mode prop
   children: React.ReactNode;
-  /**
-   * This is for the docs site. You can ignore it or remove it.
-   */
   disableCustomTheme?: boolean;
   themeComponents?: ThemeOptions['components'];
 }
 
 export default function AppTheme({
+  mode, // Destructure mode prop
   children,
   disableCustomTheme,
   themeComponents,
 }: AppThemeProps) {
   const theme = React.useMemo(() => {
+    const paletteMode = mode === 'system'
+      ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : mode;
+
     return disableCustomTheme
       ? {}
       : createTheme({
-          // For more details about CSS variables configuration, see https://mui.com/material-ui/customization/css-theme-variables/configuration/
           cssVariables: {
             colorSchemeSelector: 'data-mui-color-scheme',
             cssVarPrefix: 'template',
           },
-          colorSchemes, // Recently added in v6 for building light & dark mode app, see https://mui.com/material-ui/customization/palette/#color-schemes
-          typography:{
-               fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+          palette: {
+            mode: paletteMode, // Set the palette mode based on the selected mode
+          },
+          typography: {
+            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
           },
           shadows,
           shape,
@@ -46,7 +50,8 @@ export default function AppTheme({
             ...themeComponents,
           },
         });
-  }, [disableCustomTheme, themeComponents]);
+  }, [mode, disableCustomTheme, themeComponents]); // Include mode in the dependency array
+
   if (disableCustomTheme) {
     return <React.Fragment>{children}</React.Fragment>;
   }
