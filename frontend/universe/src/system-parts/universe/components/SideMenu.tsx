@@ -34,7 +34,8 @@ type MenuItemProps = {
   isOpen: boolean;
   openSubMenu: string | null;
   onSubMenuToggle: (label: string) => void;
-  onClick: (path: string) => void; // Add onClick prop
+  onClick: (path: string) => void; 
+  selectedPath: string;
 };
 
 type MenuHeadingProps = {
@@ -43,7 +44,7 @@ type MenuHeadingProps = {
 
 const MenuHeading: React.FC<MenuHeadingProps> = ({ heading }) => (
   <>
-    <Typography variant="subtitle1" sx={{ padding: 2, fontWeight: 'bold', color: 'text.secondary' }}>
+    <Typography variant="subtitle1" sx={{ padding: 1, fontWeight: 'bold', color: 'text.secondary' }}>
       {heading}
     </Typography>
     <Divider />
@@ -57,39 +58,51 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({
   isOpen,
   openSubMenu,
   onSubMenuToggle,
-  path, // Add this to receive the path
-  onClick // Add this to receive the onClick function
+  path, 
+  onClick , 
+  selectedPath,
 }) => {
-  const navigate = useNavigate(); // Get the navigate function
-
   const handleItemClick = () => {
-    if (path) {
-      navigate(path); // Navigate to the path if it exists
-    } else {
+    if (subItems) {
       onSubMenuToggle(label); // Toggle submenu if there are subItems
+    } else if (path) {
+      onClick(path); // Navigate to the path if it exists
     }
   };
+  const isSelected = selectedPath === path;
 
   return (
     <>
-      <ListItem onClick={handleItemClick} sx={{ paddingLeft: isOpen ? 2 : 0 }}>
-        <ListItemIcon sx={{ minWidth: isOpen ? 40 : 24, marginRight: isOpen ? 1 : 0 }}>{icon}</ListItemIcon>
+      <ListItem
+        onClick={handleItemClick}
+        sx={{
+          paddingLeft: isOpen ? 1 : 0,
+          cursor: 'pointer',
+          backgroundColor: isSelected ? 'grey.300' : 'transparent',
+          '&:hover': {
+            backgroundColor: 'grey.300', 
+          },          
+        }}
+      >
+        <ListItemIcon sx={{ minWidth: isOpen ? 4 : 24, marginRight: isOpen ? 1 : 0 }}>{icon}</ListItemIcon>
         {isOpen && <ListItemText primary={label} primaryTypographyProps={{ fontSize: '1rem', ml: 1 }} />}
         {subItems && <ListItemIcon>{openSubMenu === label ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>}
       </ListItem>
       {subItems && (
         <Collapse in={openSubMenu === label} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+          <List component="div" disablePadding sx={{ backgroundColor: 'grey.200' }}>
             {subItems.map((subItem) => (
               <MenuItemComponent
                 key={subItem.label}
                 label={subItem.label}
                 icon={subItem.icon}
+                path={subItem.path}
+                subItems={subItem.subItems}
                 isOpen={isOpen}
                 openSubMenu={openSubMenu}
                 onSubMenuToggle={onSubMenuToggle}
                 onClick={onClick}
-                path={subItem.path}
+                selectedPath={selectedPath}
               />
             ))}
           </List>
@@ -99,7 +112,10 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({
   );
 };
 
-const SideMenu: React.FC<{ onMenuItemClick: (path: string) => void }> = ({ onMenuItemClick }) => {
+const SideMenu: React.FC<{ onMenuItemClick: (path: string) => void; selectedPath: string }> = ({ 
+  onMenuItemClick,
+  selectedPath,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
 
@@ -112,28 +128,28 @@ const SideMenu: React.FC<{ onMenuItemClick: (path: string) => void }> = ({ onMen
   };
 
   const menuItems = [
-      {
-        heading: 'System Administration',
-        items: [{ label: 'User Management', icon: <UsersIcon />, path: '/admin/users' }],
-      },
-      {
-        heading: 'Entity Administration',
-        items: [
-          {
-            label: 'Organization',
-            icon: <OrganizationIcon />,
-            path: '#',
-            subItems: [
-              { label: 'Profile', icon: <ProfileIcon />, path: '/settings/profile', isOpen: true, openSubMenu: null, onSubMenuToggle: () => {}, onClick: () => {} },
-              { label: 'Branding', icon: <BrandingIcon />, path: '/settings/branding', isOpen: true, openSubMenu: null, onSubMenuToggle: () => {}, onClick: () => {} },
-              { label: 'Hierarchies', icon: <HierarchiesIcon />, path: '/settings/hierarchies', isOpen: true, openSubMenu: null, onSubMenuToggle: () => {}, onClick: () => {} },
-              { label: 'Setups', icon: <SetupsIcon />, path: '/settings/setups', isOpen: true, openSubMenu: null, onSubMenuToggle: () => {}, onClick: () => {} },
-            ],
-          },
-        ],
-      },
-    ];
-
+    {
+      heading: 'Manage Entities',
+      items: [
+        {
+          label: 'Organization',
+          icon: <OrganizationIcon />,
+          path: '#',
+          subItems: [
+            { label: 'Profile', icon: <ProfileIcon />, path: '/organization/profile', isOpen, openSubMenu, onSubMenuToggle: handleSubMenuToggle, onClick: onMenuItemClick, selectedPath: '' },
+            { label: 'Branding', icon: <BrandingIcon />, path: '/organization/branding', isOpen, openSubMenu, onSubMenuToggle: handleSubMenuToggle, onClick: onMenuItemClick, selectedPath: '' },
+            { label: 'Hierarchies', icon: <HierarchiesIcon />, path: '/organization/hierarchies', isOpen, openSubMenu, onSubMenuToggle: handleSubMenuToggle, onClick: onMenuItemClick, selectedPath: '' },
+            { label: 'Setups', icon: <SetupsIcon />, path: '/organization/setups', isOpen, openSubMenu, onSubMenuToggle: handleSubMenuToggle, onClick: onMenuItemClick, selectedPath: '' },
+          ],
+        },
+      ],
+    },
+    {
+      heading: 'System Administration',
+      items: [{ label: 'User Management', icon: <UsersIcon />, path: '/admin/users' }],
+    },
+  ];
+  
   return (
     <Drawer
       variant="permanent"
@@ -162,6 +178,7 @@ const SideMenu: React.FC<{ onMenuItemClick: (path: string) => void }> = ({ onMen
                 openSubMenu={openSubMenu}
                 onSubMenuToggle={handleSubMenuToggle}
                 onClick={onMenuItemClick}
+                selectedPath={selectedPath}
               />
             ))}
           </React.Fragment>

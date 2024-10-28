@@ -17,6 +17,7 @@ import Setups from './components/OrganizationSetupsPage';
 const Dashboard: React.FC = () => {
   const [selectedComponent, setSelectedComponent] = useState<JSX.Element | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPath, setSelectedPath] = useState<string>('');
 
   const handleSearch = () => {
     console.log('Searching for:', searchTerm);
@@ -24,6 +25,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleMenuItemClick = (path: string) => {
+    setSelectedPath(path); 
     switch (path) {
       case '/admin/users':
         setSelectedComponent(<UserManagement />);
@@ -51,7 +53,7 @@ const Dashboard: React.FC = () => {
       <Box display="flex" flexDirection="column" height="100vh">
         <AppNavbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch}/>
         <Box display="flex" flexGrow={1}>
-          <SideMenu onMenuItemClick={handleMenuItemClick} />
+          <SideMenu onMenuItemClick={handleMenuItemClick} selectedPath={selectedPath} />
           <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
              {selectedComponent}
            </Box>
