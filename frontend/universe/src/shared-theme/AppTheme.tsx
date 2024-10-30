@@ -48,6 +48,15 @@ export default function AppTheme({
             ...navigationCustomizations,
             ...surfacesCustomizations,
             ...themeComponents,
+            MuiContainer: {
+              styleOverrides: {
+                root: {
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  width: '100%',
+                },
+              },
+            },
           },
         });
   }, [mode, disableCustomTheme, themeComponents]); // Include mode in the dependency array

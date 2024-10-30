@@ -5,6 +5,8 @@ import logging
 from oauth2_provider.views import TokenView
 from django.http import JsonResponse
 from django.http import QueryDict
+from rest_framework.response import Response
+from rest_framework import status
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -33,3 +35,4 @@ class CustomTokenView(TokenView):
 
         # Now call the parent class's post method to handle the token request
         return super().post(request, *args, **kwargs)
+

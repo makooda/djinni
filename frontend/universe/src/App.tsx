@@ -1,6 +1,7 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AppTheme from './shared-theme/AppTheme';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import UniverseLogin from './system-parts/universe/SignIn';
