@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+//import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useTheme } from '@mui/material/styles';
 import BreadCrumbs from './components/BreadCrumbs'; 
 import DataTable from './components/DataTable';
+import UserForm from './components/UserForm';
+import { User } from '../types/User';
 import {
   Box,
   Container,
   CircularProgress
 } from '@mui/material';
-import axios from 'axios';
 
 const handleEdit = (id: number) => {
   console.log(`Edit user with id: ${id}`);
@@ -21,27 +24,24 @@ const handleDelete = (id: number) => {
   console.log(`Delete users with ids: ${id}`);
 };
 
-const handleAdd = () => {
-  console.log('Add new user');
-};
-
 const handleMultipleDelete = (ids: number[]) => {
   // Logic to delete multiple rows using the ids array
   console.log('Deleting rows with IDs:', ids);
 };
 
 const UserManagementPage: React.FC = () => {
-  const theme = useTheme();
-  interface User {
-    id: number;
-    username: string;
-    email: string;
-    role: string;
-  }
+  const theme = useTheme(); 
 
+  //User Data State
   const [userData, setUserData] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
+  //Form Modal State
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'add' | 'edit' | 'view'>('add');
+  const [selectedUser, setSelectedUser] = useState<User | undefined>();
+
+  //Data Grid Columns
   const userColumns = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'username', headerName: 'User Name', width: 130 },
@@ -49,17 +49,39 @@ const UserManagementPage: React.FC = () => {
     { field: 'role', headerName: 'Role', width: 130 },
   ];
 
+  //handling Form Modal Actions
+  const handleOpenForm = (mode: 'add' | 'edit' | 'view', user?: User) => {
+    setSelectedUser(user);
+    setModalMode(mode);
+    setModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+  const handleUserSubmit = (user: User) => {
+    if (modalMode === 'add') {
+      // Add user logic
+    } else if (modalMode === 'edit') {
+      // Edit user logic
+    }
+  };
+
+  const handleAdd = () => {
+    handleOpenForm('add')
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
       const UserListEndpoint = 'api/users/';
       const RefreshTokenEndPoint = 'api/refreshtoken/';
-      
+      //console.log(localStorage.getItem('access_token'))
+
       try {       
           const response = await axios.get(`${userServiceBaseUrl}${UserListEndpoint}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}` || '',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
           },
         });     
         setUserData(response.data as User[]);
@@ -67,32 +89,35 @@ const UserManagementPage: React.FC = () => {
       } catch (error: any) {        
             
         if (error.response && error.response.status === 401) {
-          console.log('Axios error:', error.message);          
-
-          // Token expired, attempt refresh
-          const refreshToken = localStorage.getItem('refresh_token');
-          const response = await axios.post<{ access_token: string; refresh_token: string }>(`${userServiceBaseUrl}${RefreshTokenEndPoint}`, { refreshToken }, {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-          const { access_token, refresh_token }: { access_token: string; refresh_token: string } = response.data;
-          localStorage.setItem('access_token', access_token);
-          localStorage.setItem('refresh_token', refresh_token);
-          
-          // Retry the request with the new access token
-            try {
-              const response = await axios.get(`${userServiceBaseUrl}${UserListEndpoint}`, {
+             console.log('Axios error:', error.message);         
+          try{
+              // Token expired, attempt refresh
+            const refreshToken = localStorage.getItem('refresh_token');
+            const response = await axios.post<{ access_token: string; refresh_token: string }>(`${userServiceBaseUrl}${RefreshTokenEndPoint}`, { 'refresh_token': refreshToken }, {
                 headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${localStorage.getItem('access_token')}` || '',
                 },
               });
+            const { access_token, refresh_token }: { access_token: string; refresh_token: string } = response.data;
+            localStorage.setItem('access_token', access_token);
+            localStorage.setItem('refresh_token', refresh_token);
+          }catch(error: any){
+            console.error('Error refreshing token:', error);
+          }       
+         
+        // Retry the request with the new access token
+          try {
+            const response = await axios.get(`${userServiceBaseUrl}${UserListEndpoint}`, {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}` || '',
+              },
+            });
 
-              setUserData(response.data as User[]);
-            } catch (retryError) {
-              console.error('Error refetching users after token refresh:', retryError);
-            }          
+            setUserData(response.data as User[]);
+          } catch (retryError) {
+            console.error('Error refetching users after token refresh:', retryError);
+          }          
         } else {
           console.error('Error fetching users:', error);
         }
@@ -136,9 +161,16 @@ const UserManagementPage: React.FC = () => {
                 onAdd={handleAdd}
                 onMultipleDelete={handleMultipleDelete}
              />
+             <UserForm
+                open={modalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handleUserSubmit}
+                mode={modalMode}
+                user={selectedUser}
+              />
             </Box>
       </Container>
-    </Box>
+    </Box>    
   );
 };
 
