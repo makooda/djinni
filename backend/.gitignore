@@ -2,3 +2,4 @@
 .env
 .user-management/src/user_management/__pychche__
 debug.log
+.user-management/src/users/migrations

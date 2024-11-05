@@ -37,34 +37,30 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function SignIn(props: { disableCustomTheme?: boolean }) {
+export default function ChangePassword(props: { disableCustomTheme?: boolean }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [username, setUsername] = React.useState('');
+  
   const [password, setPassword] = React.useState('');
-  const [usernameError, setUsernameError] = React.useState(false);
-  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-
-  const [unauthorizedError, setUnauthorizedError] = React.useState(false);
-  const [unauthorizedErrorMessage, setUnauthorizedErrorMessage] = React.useState('');
+  
+  const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = React.useState('');
 
   const validateInputs = () => {
     let isValid = true;
-    if (!username) {
-      setUsernameError(true);
-      setUsernameErrorMessage('Username is required.');
-      isValid = false;
-    } else {
-      setUsernameError(false);
-      setUsernameErrorMessage('');
-    }
 
-    if (!password || password.length < 6) {
+    if (!password || password.length < 6 || !confirmPassword || confirmPassword.length < 6 ||password !== confirmPassword) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Password & Confirm Passwor must be same and at least 6 characters long.');
+      
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage('Password & Confirm Passwor must be same and at least 6 characters long.');
+    
       isValid = false;
     } else {
       setPasswordError(false);
@@ -83,7 +79,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     try {
       const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
-      const signinEndpoint = 'api/signin/';
+      const signinEndpoint = 'api/changepassword/';
       
       const response = await axios.post<{ access_token: string; refresh_token: string }>(`${userServiceBaseUrl}${signinEndpoint}`, { username, password }, {
         headers: {

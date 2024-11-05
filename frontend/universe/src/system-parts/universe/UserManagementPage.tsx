@@ -6,6 +6,9 @@ import BreadCrumbs from './components/BreadCrumbs';
 import DataTable from './components/DataTable';
 import UserForm from './components/UserForm';
 import { User } from '../types/User';
+import CircleIcon from '@mui/icons-material/Circle';
+import { green, red } from '@mui/material/colors';
+import { GridColDef } from '@mui/x-data-grid';
 import {
   Box,
   Container,
@@ -41,13 +44,29 @@ const UserManagementPage: React.FC = () => {
   const [modalMode, setModalMode] = useState<'add' | 'edit' | 'view'>('add');
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
 
-  //Data Grid Columns
-  const userColumns = [
+
+
+  const userColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'username', headerName: 'User Name', width: 130 },
+    { field: 'username', headerName: 'User Name', width: 200 },
+    { field: 'first_name', headerName: 'First Name', width: 200 },
+    { field: 'last_name', headerName: 'Last Name', width: 300 },
     { field: 'email', headerName: 'Email', width: 200 },
     { field: 'role', headerName: 'Role', width: 130 },
-  ];
+    {
+      field: 'is_staff',
+      headerName: 'Staff Status',
+      width: 130,
+        renderCell: (params) => (
+          <CircleIcon
+            sx={{
+              color: params.value ? green[500] : red[500],
+              fontSize: 20,
+            }}
+          />
+        ),
+      },
+    ];
 
   //handling Form Modal Actions
   const handleOpenForm = (mode: 'add' | 'edit' | 'view', user?: User) => {

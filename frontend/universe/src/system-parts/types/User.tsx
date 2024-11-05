@@ -5,4 +5,5 @@ export interface User {
     role: string;
     firstname: string;
     lastname: string;
+    is_staff: boolean;
   }

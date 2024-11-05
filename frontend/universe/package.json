@@ -17,7 +17,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@toolpad/core": "^0.7.0",
-    "@types/axios": "^0.9.36",
     "@types/jest": "^27.5.2",
     "@types/react": "^18.3.10",
     "axios": "^1.7.7",

@@ -9,22 +9,21 @@ import {
   Button,
   TextField,
   IconButton,
-  Typography ,
-  FormControl, 
+  Typography,
+  FormControl,
   FormLabel,
-  Box,
-  FormGroup
+  Box
 } from '@mui/material';
 import { User } from '../../types/User';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1),
-    },
-  }));
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
 
 interface UserFormModalProps {
   open: boolean;
@@ -35,14 +34,20 @@ interface UserFormModalProps {
 }
 
 const UserForm: React.FC<UserFormModalProps> = ({ open, onClose, onSubmit, mode, user }) => {
-  const [formData, setFormData] = useState<User>({ id: 0, firstname: '', lastname: '', email: '', username:'', role:'' });
+  const [formData, setFormData] = useState<User>({
+    id: 0,
+    firstname: '',
+    lastname: '',
+    email: '',
+    username: '',
+    role: '',
+    is_staff: false
+  });
 
   useEffect(() => {
-    if (mode === 'edit' || mode === 'view') {
-      setFormData(user || { id: 0, username:'', firstname: '', lastname: '', email: '', role: ''});
-    } else {
-      setFormData({ id: 0, firstname: '', lastname: '', email: '', username:'', role:'' });
-    }
+    setFormData(
+      mode === 'edit' || mode === 'view' ? user || formData : formData
+    );
   }, [mode, user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,71 +63,64 @@ const UserForm: React.FC<UserFormModalProps> = ({ open, onClose, onSubmit, mode,
   };
 
   return (
-    <BootstrapDialog 
-        open={open} 
-        onClose={onClose} 
-        fullWidth
-        maxWidth='lg'
-        aria-labelledby="form-dialog-title"
-        >
-
-      <DialogTitle sx={{ m: 0, p: 2 }} id="form-dialog-title" >
-            <Typography gutterBottom>
-                {mode === 'add' ? 'Add New User' : mode === 'edit' ? 'Edit User' : 'View User'}
-            </Typography>
-      </DialogTitle>
-
-      <IconButton
+    <BootstrapDialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+      <DialogTitle>
+        <Typography variant="h6">
+          {mode === 'add' ? 'Add New User' : mode === 'edit' ? 'Edit User' : 'View User'}
+        </Typography>
+        <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={(theme) => ({
+          sx={{
             position: 'absolute',
             right: 8,
             top: 8,
-            color: theme.palette.grey[500],
-          })}
+            color: (theme) => theme.palette.grey[500]
+          }}
         >
-             <CloseIcon />
+          <CloseIcon />
         </IconButton>
+      </DialogTitle>
 
       <DialogContent dividers>
-            <Box
-                component="form"
-                sx={{ '& .MuiTextField-root': { m: 1, width: '95%' } }}
-                noValidate
-                autoComplete="off"
-            > 
-            
-                <FormControl fullWidth>
-                    <FormLabel htmlFor="firstname"> First Name</FormLabel>
-                        <TextField                    
-                            name="firstName"
-                            id="firstname"
-                            onChange={handleChange}
-                            value={formData.firstname}
-                            disabled={mode === 'view'}
-                            type="text"
-                            placeholder="John"
-                            variant="outlined"
-                        />
-                </FormControl>
-                <FormControl fullWidth>                    
-                    <FormLabel htmlFor="lastname"> Last Name *</FormLabel>
-                        <TextField   
-                            required                 
-                            name="lastname"
-                            id="lastname"
-                            onChange={handleChange}
-                            value={formData.lastname}
-                            disabled={mode === 'view'}
-                            type="text"
-                            placeholder="Doe"
-                            variant="outlined"
-                        />
-                </FormControl> 
-                         
-          </Box>        
+        <Box
+          component="form"
+          sx={{ '& .MuiTextField-root': { m: 1, width: '95%' } }}
+          noValidate
+          autoComplete="off"
+        >
+          <FormControl fullWidth>
+            <FormLabel htmlFor="firstname">First Name *</FormLabel>
+            <TextField
+              name="firstname"
+              id="firstname"
+              onChange={handleChange}
+              value={formData.firstname}
+              disabled={mode === 'view'}
+              type="text"
+              placeholder="John"
+              variant="outlined"
+              required
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <FormLabel htmlFor="lastname">Last Name *</FormLabel>
+            <TextField
+              name="lastname"
+              id="lastname"
+              onChange={handleChange}
+              value={formData.lastname}
+              disabled={mode === 'view'}
+              type="text"
+              placeholder="Doe"
+              variant="outlined"
+              required
+            />
+          </FormControl>
+          {/* Add other form fields as needed */}
+        </Box>
       </DialogContent>
+
       <DialogActions>
         <Button onClick={onClose} color="secondary">
           Cancel

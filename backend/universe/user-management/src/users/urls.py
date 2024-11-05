@@ -3,6 +3,7 @@ from . import views
 from .view_classes.custom_token_view import CustomTokenView
 
 urlpatterns = [
+    path('updatepassword/', views.update_password, name='update_password'),
     path('register/', views.register, name='register'),
     path('signin/', views.signin, name='signin'),
     path('refreshtoken/', views.refresh_token, name='refresh_token'),
