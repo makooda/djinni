@@ -1,10 +1,20 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Card as MuiCard, CssBaseline, FormControl, FormLabel, TextField, Typography, Stack } from '@mui/material';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  Box,
+  Button,
+  Card as MuiCard,
+  CssBaseline,
+  FormControl,
+  FormLabel,
+  TextField,
+  Typography,
+  Stack,
+  CircularProgress
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { loginSuccess, loginFailure } from '../../store/authSlice';
 import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import { PadlockIcon } from './CustomIcons';
@@ -38,33 +48,30 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function ChangePassword(props: { disableCustomTheme?: boolean }) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  
-  const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-  
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  
-  const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
-  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = React.useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const validateInputs = () => {
     let isValid = true;
 
-    if (!password || password.length < 6 || !confirmPassword || confirmPassword.length < 6 ||password !== confirmPassword) {
+    if (!password || password.length < 6 || password !== confirmPassword) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password & Confirm Passwor must be same and at least 6 characters long.');
-      
+      setPasswordErrorMessage('Passwords must be the same and at least 6 characters long.');
       setConfirmPasswordError(true);
-      setConfirmPasswordErrorMessage('Password & Confirm Passwor must be same and at least 6 characters long.');
-    
+      setConfirmPasswordErrorMessage('Passwords must be the same and at least 6 characters long.');
       isValid = false;
     } else {
       setPasswordError(false);
       setPasswordErrorMessage('');
+      setConfirmPasswordError(false);
+      setConfirmPasswordErrorMessage('');
     }
 
     return isValid;
@@ -73,43 +80,45 @@ export default function ChangePassword(props: { disableCustomTheme?: boolean }) 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!validateInputs()) {
-      return; // Prevent submission if inputs are invalid
-    }
+    if (!validateInputs()) return;
+
+    setLoading(true);
+    setResponseMessage(''); // Clear any previous message
 
     try {
       const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
-      const signinEndpoint = 'api/changepassword/';
-      
-      const response = await axios.post<{ access_token: string; refresh_token: string }>(`${userServiceBaseUrl}${signinEndpoint}`, { username, password }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const changePasswordEndpoint = 'api/updatepassword/';
 
-      const { access_token, refresh_token }: { access_token: string; refresh_token: string } = response.data;
-      localStorage.setItem('access_token', access_token);
-      localStorage.setItem('refresh_token', refresh_token);
+      interface ChangePasswordResponse {
+        message: string;
+      }
 
-      dispatch(loginSuccess({ accessToken: access_token, refreshToken: refresh_token }));
-      navigate('/universe/dashboard');
+      const response = await axios.post<ChangePasswordResponse>(`${userServiceBaseUrl}${changePasswordEndpoint}`,{         
+            new_password: password 
+    
+        },{ 
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+             }
+        }
+      );
 
-      setUnauthorizedError(false); // Clear unauthorized error if successful
+      setResponseMessage(response.data.message);
+      setLoading(false);
+
+      // Redirect to dashboard after 3 seconds
+      setTimeout(() => {
+        navigate('/universe/dashboard');
+      }, 3000);
 
     } catch (error: any) {
-      console.error(error);
-      // Check for password expiration or first login redirect condition
+      setLoading(false);
       if (error.response && error.response.status === 403) {
-          const errorMessage = error.response.data.detail;
-
-          if (errorMessage.includes('Password update required')) {
-            navigate('universe/update-password'); // Redirect to update password page
-            return;
-          }
-        }
-      setUnauthorizedError(true);
-      setUnauthorizedErrorMessage('Unauthorized User, Try Again');
-      dispatch(loginFailure('Unauthorized User, Try Again'));
+        setResponseMessage(error.response.data.detail || 'Password change unsuccessful.');
+      } else {
+        setResponseMessage('An error occurred. Please try again.');
+      }
     }
   };
 
@@ -126,53 +135,54 @@ export default function ChangePassword(props: { disableCustomTheme?: boolean }) 
               <PadlockIcon />
             </Box>
             <Typography variant="h6" sx={{ textAlign: 'center' }}>
-              Access The Universe
+              Change Password
             </Typography>
 
-            {unauthorizedError && (
-              <Typography variant="body2" color="error" sx={{ textAlign: 'center' }}>
-                {unauthorizedErrorMessage}
+            {/* Display success/error response message */}
+            {responseMessage && (
+              <Typography variant="body2" color={responseMessage.includes('unsuccessful') ? 'error' : 'primary'} sx={{ textAlign: 'center' }}>
+                {responseMessage}
               </Typography>
             )}
 
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <FormControl>
-                <FormLabel htmlFor="username">Username*</FormLabel>
+                <FormLabel htmlFor="password">Password*</FormLabel>
                 <TextField
-                  error={usernameError}
-                  helperText={usernameErrorMessage}
-                  id="username"
-                  type="text"
-                  name="username"
-                  placeholder="johndoe"
-                  autoComplete="username"
+                  error={passwordError}
+                  helperText={passwordErrorMessage}
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="Enter new password"
                   autoFocus
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   fullWidth
                   variant="outlined"
                 />
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="password">Password*</FormLabel>
+                <FormLabel htmlFor="confirmPassword">Confirm Password*</FormLabel>
                 <TextField
-                  error={passwordError}
-                  helperText={passwordErrorMessage}
-                  name="password"
-                  placeholder="••••••"
+                  error={confirmPasswordError}
+                  helperText={confirmPasswordErrorMessage}
+                  name="confirmPassword"
                   type="password"
-                  id="password"
-                  autoComplete="current-password"
+                  id="confirmPassword"
+                  placeholder="Confirm new password"
                   required
                   fullWidth
                   variant="outlined"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </FormControl>
-              <Button type="submit" fullWidth variant="contained">
-                Sign in
+
+              {/* Display loading spinner on submit */}
+              <Button type="submit" fullWidth variant="contained" disabled={loading}>
+                {loading ? <CircularProgress size={24} /> : 'Save New Password'}
               </Button>
             </Box>
           </Card>

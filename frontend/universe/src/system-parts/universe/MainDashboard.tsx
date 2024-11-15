@@ -13,6 +13,7 @@ import Profile from './OrganizationProfilePage';
 import Branding from './OrganizationBrandingPage'; 
 import Hierarchies from './OrganizationHierarchiesPage'; 
 import Setups from './OrganizationSetupsPage'; 
+import FormsCreator from './CreateFormsPage';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -60,7 +61,7 @@ const MainDashboard: React.FC = () => {
         setSelectedComponent(<UserManagement />);
         break;
       case '/organization/profile':
-        setSelectedComponent(<Profile />);
+        setSelectedComponent(<FormsCreator />);
         break;
       case '/organization/branding':
         setSelectedComponent(<Branding />);

@@ -103,7 +103,8 @@ const UserManagementPage: React.FC = () => {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
           },
         });     
-        setUserData(response.data as User[]);
+            setUserData(response.data as User[]);
+            console.log('call1')
 
       } catch (error: any) {        
             
@@ -132,7 +133,7 @@ const UserManagementPage: React.FC = () => {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}` || '',
               },
             });
-
+              console.log('call2')
             setUserData(response.data as User[]);
           } catch (retryError) {
             console.error('Error refetching users after token refresh:', retryError);

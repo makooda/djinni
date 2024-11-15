@@ -56,9 +56,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'users.middlewares.PasswordExpiryMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.middlewares.PasswordExpiryMiddleware',
 ]
 
 ROOT_URLCONF = 'user_management.urls'
@@ -189,7 +189,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'debug.log'),  # Change this to wherever you want the log file
+            'filename': os.path.join(BASE_DIR, 'debug.log'), 
         },
         'console': {
             'level': 'DEBUG',
