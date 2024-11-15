@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, Button, Card as MuiCard, CssBaseline, FormControl, FormLabel, TextField, Typography, Stack } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import AppTheme from '../../shared-theme/AppTheme';
+
 import AppNavbar from './components/AppNavbar';
 import SideMenu from './components/SideMenu';
 import Footer from './components/Footer';
@@ -11,6 +13,35 @@ import Profile from './OrganizationProfilePage';
 import Branding from './OrganizationBrandingPage'; 
 import Hierarchies from './OrganizationHierarchiesPage'; 
 import Setups from './OrganizationSetupsPage'; 
+import FormsCreator from './CreateFormsPage';
+
+const Card = styled(MuiCard)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'center',
+  width: '100%',
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+  margin: 'auto',
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '450px',
+  },
+}));
+
+const MainDashboardContainer = styled(Stack)(({ theme }) => ({
+  minHeight: '100%',
+  padding: theme.spacing(0),
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    zIndex: -1,
+    inset: 0,
+    backgroundImage:
+      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+    backgroundRepeat: 'no-repeat',
+  },
+}));
 
 
 const MainDashboard: React.FC = () => {
@@ -30,7 +61,7 @@ const MainDashboard: React.FC = () => {
         setSelectedComponent(<UserManagement />);
         break;
       case '/organization/profile':
-        setSelectedComponent(<Profile />);
+        setSelectedComponent(<FormsCreator />);
         break;
       case '/organization/branding':
         setSelectedComponent(<Branding />);
@@ -49,16 +80,18 @@ const MainDashboard: React.FC = () => {
   return (
     <AppTheme mode="light">
       <CssBaseline enableColorScheme />
-      <Box display="flex" flexDirection="column" height="100vh">
-        <AppNavbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch}/>
-        <Box display="flex" flexGrow={1}>
-          <SideMenu onMenuItemClick={handleMenuItemClick} selectedPath={selectedPath} />
-          <Box component="main" sx={{ flexGrow: 1 }}>
-             {selectedComponent}
-           </Box>
+        <MainDashboardContainer direction="column" justifyContent="space-between">
+          <Box display="flex" flexDirection="column" height="100vh">
+            <AppNavbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch}/>
+              <Box display="flex" flexGrow={1}>
+                <SideMenu onMenuItemClick={handleMenuItemClick} selectedPath={selectedPath} />
+                <Box component="main" sx={{ flexGrow: 1 }}>
+                  {selectedComponent}
+              </Box>
+          </Box>
+          <Footer />
         </Box>
-        <Footer />
-      </Box>
+      </MainDashboardContainer>
     </AppTheme>
   );
 };

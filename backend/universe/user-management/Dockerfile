@@ -22,4 +22,5 @@ COPY .env .env
 EXPOSE 8000
 
 # Run the Django application
-CMD ["./wait-for-it.sh", "db:5432", "--", "sh", "-c", "python src/manage.py migrate && python src/create_oauth_app.py && python src/manage.py runserver 0.0.0.0:8000"]
+CMD ["./wait-for-it.sh", "db:5432", "--", "sh", "-c", "python src/manage.py makemigrations users && python src/manage.py migrate && python src/create_oauth_app.py && python src/manage.py runserver 0.0.0.0:8000"]
+
