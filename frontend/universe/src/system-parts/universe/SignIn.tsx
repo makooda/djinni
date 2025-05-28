@@ -1,6 +1,6 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Card as MuiCard, CssBaseline, FormControl, FormLabel, TextField, Typography, Stack } from '@mui/material';
+import { useDispatch} from 'react-redux';
+import { Box, Button, Card as MuiCard, CssBaseline, FormControl, FormLabel, TextField, Typography, Stack, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -50,6 +50,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const [unauthorizedError, setUnauthorizedError] = React.useState(false);
   const [unauthorizedErrorMessage, setUnauthorizedErrorMessage] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+
+
 
   const validateInputs = () => {
     let isValid = true;
@@ -80,6 +83,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     if (!validateInputs()) {
       return; // Prevent submission if inputs are invalid
     }
+
+      setLoading(true);
 
     try {
       const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
@@ -114,6 +119,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       setUnauthorizedError(true);
       setUnauthorizedErrorMessage('Unauthorized User, Try Again');
       dispatch(loginFailure('Unauthorized User, Try Again'));
+    } finally{
+       setLoading(false);
     }
   };
 
@@ -175,8 +182,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>
-              <Button type="submit" fullWidth variant="contained">
-                Sign in
+              <Button 
+                  type="submit" 
+                  fullWidth 
+                  variant="contained"
+                  disabled={loading}
+                  startIcon={loading ? <CircularProgress size={20} sx={{ color: '#fff'}} /> : null }
+                  >
+                    {loading ? 'Signing In...': 'Sign in'}
               </Button>
             </Box>
           </Card>

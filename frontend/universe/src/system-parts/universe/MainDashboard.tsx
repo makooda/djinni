@@ -1,99 +1,103 @@
-import React, { useState } from 'react';
-import { Box, Button, Card as MuiCard, CssBaseline, FormControl, FormLabel, TextField, Typography, Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import AppTheme from '../../shared-theme/AppTheme';
+import React from 'react';
+import {
+  Box,
+  Divider,
+  InputBase,
+  Paper,
+  Typography,
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import DashboardLayout from './layouts/DashboardLayout';
+import MuiTable from './comp/MuiTable';
+import PageHeader from './comp/PageHeader';
+import SectionBox from './comp/SectionBox';
 
-import AppNavbar from './components/AppNavbar';
-import SideMenu from './components/SideMenu';
-import Footer from './components/Footer';
+const columns = [
+  { label: 'ID', key: 'id' },
+  { label: 'Name', key: 'name' },
+  { label: 'Email', key: 'email' },
+  { label: 'Role', key: 'role' },
+  { label: 'Status', key: 'status', sortable: false },
+];
 
-import Home from './HomePage'; 
-import UserManagement from './UserManagementPage'; 
-import Profile from './OrganizationProfilePage'; 
-import Branding from './OrganizationBrandingPage'; 
-import Hierarchies from './OrganizationHierarchiesPage'; 
-import Setups from './OrganizationSetupsPage'; 
-import FormsCreator from './CreateFormsPage';
-
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  margin: 'auto',
-  [theme.breakpoints.up('sm')]: {
-    maxWidth: '450px',
-  },
+const rows = Array.from({ length: 42 }, (_, i) => ({
+  id: i + 1,
+  name: `User ${i + 1}`,
+  email: `user${i + 1}@mail.com`,
+  role: i % 2 === 0 ? 'Admin' : 'Viewer',
+  status: i % 3 === 0 ? 'Active' : 'Pending',
 }));
 
-const MainDashboardContainer = styled(Stack)(({ theme }) => ({
-  minHeight: '100%',
-  padding: theme.spacing(0),
-  '&::before': {
-    content: '""',
-    display: 'block',
-    position: 'absolute',
-    zIndex: -1,
-    inset: 0,
-    backgroundImage:
-      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-    backgroundRepeat: 'no-repeat',
-  },
-}));
-
-
-const MainDashboard: React.FC = () => {
-  const [selectedComponent, setSelectedComponent] = useState<JSX.Element | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedPath, setSelectedPath] = useState<string>('');
-
-  const handleSearch = () => {
-    console.log('Searching for:', searchTerm);
-    setSearchTerm('');
-  };
-
-  const handleMenuItemClick = (path: string) => {
-    setSelectedPath(path); 
-    switch (path) {
-      case '/admin/users':
-        setSelectedComponent(<UserManagement />);
-        break;
-      case '/organization/profile':
-        setSelectedComponent(<FormsCreator />);
-        break;
-      case '/organization/branding':
-        setSelectedComponent(<Branding />);
-        break;
-      case '/organization/hierarchies':
-        setSelectedComponent(<Hierarchies />);
-        break;
-      case '/organization/setups':
-        setSelectedComponent(<Setups />);
-        break;
-      default:
-        setSelectedComponent(<Home />); // Default to Home or handle accordingly
-    }
-  };
-
+export default function MainDashboard() {
   return (
-    <AppTheme mode="light">
-      <CssBaseline enableColorScheme />
-        <MainDashboardContainer direction="column" justifyContent="space-between">
-          <Box display="flex" flexDirection="column" height="100vh">
-            <AppNavbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch}/>
-              <Box display="flex" flexGrow={1}>
-                <SideMenu onMenuItemClick={handleMenuItemClick} selectedPath={selectedPath} />
-                <Box component="main" sx={{ flexGrow: 1 }}>
-                  {selectedComponent}
-              </Box>
-          </Box>
-          <Footer />
-        </Box>
-      </MainDashboardContainer>
-    </AppTheme>
-  );
-};
+    <DashboardLayout>
+      <Box height={{ xs: 'auto', sm: '100%' }}>
+        <PageHeader title="All Activities" subtitle="Logs and process list" />
 
-export default MainDashboard;
+        <SectionBox height={200}>
+          <Box display="flex" height="100%">
+            {/* Left 25% */}
+            <Box flex={1} display="flex" alignItems="center" justifyContent="flex-start">
+              <Paper
+                component="form"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  maxWidth: 300,
+                }}
+              >
+                <SearchIcon sx={{ color: 'grey.600', mr: 0.5, ml: 0.5 }} />
+                <InputBase
+                  placeholder="Search..."
+                  sx={{ flex: 1 }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Paper>
+            </Box>
+
+            {/* Divider */}
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ bgcolor: 'grey.700', marginX: '10px' }}
+            />
+
+            {/* Middle 50% */}
+            <Box flex={2} display="flex" alignItems="center" justifyContent="flex-start">
+              <Typography>Center</Typography>
+            </Box>
+
+            {/* Divider */}
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ bgcolor: 'grey.700', marginRight: '10px' }}
+            />
+
+            {/* Right 25% */}
+            <Box flex={1} display="flex" alignItems="center" justifyContent="flex-start">
+              <Typography variant="body1">Right</Typography>
+            </Box>
+          </Box>
+        </SectionBox>
+
+        <SectionBox bgcolor="grey.100" width={{ xs: '100%' }} height="100%">
+          <MuiTable
+            columns={columns}
+            rows={rows}
+            renderRowIcon={(row) => {
+              const roleIcon = row.role === 'Admin' ? '🛡️' : '👀';
+              const statusIcon = row.status === 'Active' ? '✅' : '⏳';
+              return (
+                <span style={{ fontSize: '1rem' }}>
+                  {roleIcon} {statusIcon}
+                </span>
+              );
+            }}
+          />
+        </SectionBox>
+      </Box>
+    </DashboardLayout>
+  );
+}
