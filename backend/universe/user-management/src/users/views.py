@@ -2,16 +2,18 @@ import json
 import logging
 import requests
 import os
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.http import QueryDict
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
+from .utilities import Utilities
+from django.utils import timezone
 
 from dotenv import load_dotenv
 
@@ -19,6 +21,29 @@ logger = logging.getLogger(__name__)
 
 # Load the environment variables from .env file
 load_dotenv()
+
+from django.contrib.auth import update_session_auth_hash
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_password(request):
+    new_password = request.data.get('new_password')
+    request.user.set_password(new_password)
+    request.user.save()
+
+    request.user.profile.first_time_login = False
+    request.user.profile.last_password_update = timezone.now()
+    request.user.profile.save()
+    
+    update_session_auth_hash(request, request.user)  
+    return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def get_user_details(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    serializer = UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
@@ -28,14 +53,35 @@ def list_users(_request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        # Hash the password before saving
-        serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #Create a default password and comunicate to client later
+        password = Utilities.generate_random_password()
+        print(password)
+        serializer.validated_data['password'] = make_password(password)
+        user = serializer.save()
+
+        # Create a new user profile
+        profile_data = request.data.get('profile')
+        if profile_data:
+          user.profile.phone_number = profile_data.get('phone_number')
+          user.profile.address = profile_data.get('address')
+          user.profile.first_time_login = True
+          user.profile.save() 
+
+        # Send the password to the user's email
+        # email = user.email
+        # subject = 'Welcome to Universe'
+        # message = f'Hi {user.username},\n\nWelcome to Universe! Your account has been created successfully. Your password is: {password}\n\nPlease login to your account and change your password.\n\nThanks,\nUniverse Team'
+        # Utilities.send_email(email, subject, message)
+        # logger.info(f"Password sent to {email}")
+
+        response_data = serializer.data
+        response_data['password'] = password  # Add the random password to the response
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])

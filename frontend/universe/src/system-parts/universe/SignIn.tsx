@@ -105,8 +105,17 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
       setUnauthorizedError(false); // Clear unauthorized error if successful
 
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      // Check for password expiration or first login redirect condition
+      if (error.response && error.response.status === 403) {
+          const errorMessage = error.response.data.detail;
+
+          if (errorMessage.includes('Password update required')) {
+            navigate('universe/update-password'); // Redirect to update password page
+            return;
+          }
+        }
       setUnauthorizedError(true);
       setUnauthorizedErrorMessage('Unauthorized User, Try Again');
       dispatch(loginFailure('Unauthorized User, Try Again'));
