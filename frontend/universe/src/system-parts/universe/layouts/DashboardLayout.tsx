@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" sx={{ mr: 4 }}>
-            Universe
+            Djinni
           </Typography>
 
           {/* Search Field */}
@@ -74,9 +74,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           >
             <SearchIcon sx={{ color: 'grey.600', mr: 1 }} />
             <InputBase
-              placeholder="Search the Universe"
+              placeholder="Looking for something? Ask away :) "
               sx={{ flex: 1, fontSize: 14 }}
-              inputProps={{ 'aria-label': 'search the universe' }}
+              inputProps={{ 'aria-label': 'Ask Djinni anything' }}
             />
           </Paper>
         </Box>
@@ -85,32 +85,47 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </Box>      
 
       {/* Main Content */}
-      <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden'}}>
+      <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Side Menu */}
-        <SideMenu open={menuOpen} /> 
+        <SideMenu open={menuOpen} />
 
         {/* Page Content */}
         <Box
           sx={{
             flex: 1,
             overflowY: 'auto',
-            flowDirection: 'column',
-            maxHeight: 'calc(100vh - 64px - 48px)', // 64px header + 48px footer
+            display: 'flex',
+            flexDirection: 'column',
+            maxHeight: 'calc(100vh - 64px - 48px)', // Adjust for header and footer
             pt: 0,
             pb: 4,
-          }}          
-        >       
-        {/* Breadcrumbs */}
-        <BreadcrumbsBar items={['Home', 'Activities']} />
-        
-        {/* Main Content */}
-        <Container maxWidth="lg">              
-          {children}
-          
-        </Container>
+          }}
+        >
+          {/* Breadcrumbs */}
+          <BreadcrumbsBar items={['Home', 'DS Code', 'Forms Builder']} />
 
+          {/* Right-Aligned Content Wrapper */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-start', 
+              px: { xs: 0, md: 1 }, // some padding
+              mt: 1,
+            }}
+          >
+            <Box
+              sx={{
+                width: { xs: '100%', sm: '100%', md: '90%', lg: '100%', xl: '100%' },
+                maxWidth: '100%',
+              }}
+            >
+              {children}
+            </Box>
+          </Box>
         </Box>
       </Box>
+
+      {/* Spacer to push footer to bottom */}
 
       {/* Docked Footer */}
       <Box

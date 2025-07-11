@@ -15,6 +15,10 @@ import {
   Settings,
   Business,
   AccountTree,
+  Code,
+  Build,
+  Forum,
+  Description, // Description icon looks like a form/document
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -61,15 +65,12 @@ const menuStructure: MenuSection[] = [
     ],
   },
   {
-    header: 'Workflows',
+    header: 'DS Code',
     items: [
       {
-        label: 'Configuration',
-        icon: <AccountTree />,
-        subItems: [
-          { label: 'Forms', path: '/home/workflows/forms' },
-          { label: 'Steps', path: '/home/workflows/steps' },
-        ],
+        label: 'Forms Builder',
+        icon: <Description />,
+        path: '/universe/ds-code/forms-builder',
       },
     ],
   },
@@ -133,14 +134,14 @@ export default function SideMenu({ open }: SideMenuProps) {
                         ? toggleSubMenu(item.label)
                         : item.path && navigate(item.path)
                     }
-                    >
+                  >
                     <ListItemIcon
                       sx={{
                         minWidth: 0,
                         color: 'grey.700',
                         mr: 0,
                         '& svg': {
-                          fontSize: 15, // or try 'small' if using MUI icons
+                          fontSize: 15,
                         },
                       }}
                     >

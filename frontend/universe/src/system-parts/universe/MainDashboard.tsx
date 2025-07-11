@@ -1,23 +1,32 @@
 import React from 'react';
+import AppTheme from '../../shared-theme/AppTheme';
 import {
   Box,
   Divider,
   InputBase,
   Paper,
-  Typography,
+  Typography
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import DashboardLayout from './layouts/DashboardLayout';
-import MuiTable from './comp/MuiTable';
+import Table from './comp/UniverseTable';
 import PageHeader from './comp/PageHeader';
 import SectionBox from './comp/SectionBox';
+import TableColumnsSelector from './comp/UniverseTableColumnSelector';
+import WorkflowFilterDropdown from './comp/UniverseWorkflowFilterDropdown';
+import BulkActionDropdown from './comp/UniverseBulkActionDropdown';
+import DateFilterBar from './comp/UniverseDateFilterBar';
+
+//mockdata
+import mockRows from './mockdata/mock_table_rows.json';
 
 const columns = [
-  { label: 'ID', key: 'id' },
-  { label: 'Name', key: 'name' },
-  { label: 'Email', key: 'email' },
-  { label: 'Role', key: 'role' },
-  { label: 'Status', key: 'status', sortable: false },
+  { label: 'ID', key: 'id', sortable: true },
+  { label: 'Name', key: 'name', sortable: true },
+  { label: 'Email', key: 'email', sortable: true },
+  { label: 'Role', key: 'role', sortable: true },
+  { label: 'Status', key: 'status', sortable: true },
+  { label: 'Workflow', key: 'workflowType', sortable: true },
 ];
 
 const rows = Array.from({ length: 42 }, (_, i) => ({
@@ -28,76 +37,143 @@ const rows = Array.from({ length: 42 }, (_, i) => ({
   status: i % 3 === 0 ? 'Active' : 'Pending',
 }));
 
-export default function MainDashboard() {
+
+
+
+
+
+export default function MainDashboard() {   
+  // State to manage visible columns
+  const [visibleColumns, setVisibleColumns] = React.useState(columns.map(col => col.key));
+  const [workflowFilters, setWorkflowFilters] = React.useState<string[]>([]);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [selectedRowIds, setSelectedRowIds] = React.useState<number[]>([]);
+
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  // Derive workflow options from rows
+  const workflowOptions = Array.from(new Set(mockRows.map(r => r.workflowType)));
+
+  // Filter rows based on workflow
+  const filteredRows = workflowFilters.length === 0
+    ? mockRows
+    : mockRows.filter(row => workflowFilters.includes(row.workflowType));
+
+  
+
   return (
-    <DashboardLayout>
-      <Box height={{ xs: 'auto', sm: '100%' }}>
-        <PageHeader title="All Activities" subtitle="Logs and process list" />
+    <AppTheme mode="light">
+      <DashboardLayout>
+        
+        <Box height={{ xs: 'auto', sm: '100%' }}>
+          <PageHeader title="All Activities" subtitle="Logs and process list" />
+          <SectionBox height={200}>
+            <Box display="flex" height="100%">
+              {/* Left 25% */}
+              <Box flex={1} display="flex" alignItems="center" justifyContent="flex-start">
+                <Paper
+                  component="form"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    maxWidth: 300,
+                  }}
+                >
+                  <SearchIcon sx={{ color: 'grey.600', mr: 0.5, ml: 0.5 }} />
+                  <InputBase
+                    placeholder="Search..."
+                    sx={{ flex: 1 }}
+                    inputProps={{ 'aria-label': 'search' }}
+                  />
+                </Paper>
+              </Box>
 
-        <SectionBox height={200}>
-          <Box display="flex" height="100%">
-            {/* Left 25% */}
-            <Box flex={1} display="flex" alignItems="center" justifyContent="flex-start">
-              <Paper
-                component="form"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  maxWidth: 300,
-                }}
-              >
-                <SearchIcon sx={{ color: 'grey.600', mr: 0.5, ml: 0.5 }} />
-                <InputBase
-                  placeholder="Search..."
-                  sx={{ flex: 1 }}
-                  inputProps={{ 'aria-label': 'search' }}
+              {/* Divider */}
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ bgcolor: 'grey.700', marginX: '10px' }}
+              />
+
+              {/* Middle 50% */}
+              <Box flex={2} display="flex" alignItems="center" justifyContent="flex-start">
+                {/* Column Selector and Workflow Filter Tray */}
+                <TableColumnsSelector
+                  columns={columns}
+                  visibleColumns={visibleColumns}
+                  onChange={setVisibleColumns}
+                  
                 />
-              </Paper>
-            </Box>
+                <Box sx={{ width: 8 }} />
 
-            {/* Divider */}
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ bgcolor: 'grey.700', marginX: '10px' }}
+                {/* Workflow Filter Tray */}
+                <WorkflowFilterDropdown
+                  selected={workflowFilters}
+                  setSelected={setWorkflowFilters}
+                  options={workflowOptions}
+                />
+
+                <Box sx={{ width: 8 }} />
+                {/* Bulk Action Dropdown */}
+                {selectedRowIds.length > 0 && (
+                  <BulkActionDropdown
+                    onActionSelect={(category, action) => {
+                      console.log(`Apply ${action} from ${category} to selected rows:`, selectedRowIds);
+                      // Hook to your backend API here
+                    }}
+                  />
+                )}
+            
+              </Box>
+              {/* Divider */}
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ bgcolor: 'grey.700', marginRight: '10px' }}
+              />
+
+              {/* Right 25% */}
+              <Box flex={1} display="flex" alignItems="center" justifyContent="flex-start">
+                <Box sx={{ width: 8 }} />
+                <DateFilterBar
+                  onDateFilterChange={(range) => {
+                    console.log('Selected Date Range:', range);
+                    // Filter the rows here or update global state
+                  }}
+                />
+
+              </Box>
+            </Box>
+          </SectionBox>
+
+          <SectionBox bgcolor="grey.100" width={{ xs: '100%' }} height="100%">
+            <Table
+              columns={columns.filter(col => visibleColumns.includes(col.key))}
+              rows={filteredRows}
+              visibleColumns={visibleColumns}
+              selected={selectedRowIds}
+              setSelected={setSelectedRowIds}
+              renderRowIcon={(row) => {
+                const roleIcon = row.role === 'Admin' ? '🛡️' : '👀';
+                const statusIcon = row.status === 'Active' ? '✅' : '⏳';
+                return (
+                  <span style={{ fontSize: '0.5rem' }}>
+                    {roleIcon} {statusIcon}
+                  </span>
+                );
+              }}
             />
-
-            {/* Middle 50% */}
-            <Box flex={2} display="flex" alignItems="center" justifyContent="flex-start">
-              <Typography>Center</Typography>
-            </Box>
-
-            {/* Divider */}
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ bgcolor: 'grey.700', marginRight: '10px' }}
-            />
-
-            {/* Right 25% */}
-            <Box flex={1} display="flex" alignItems="center" justifyContent="flex-start">
-              <Typography variant="body1">Right</Typography>
-            </Box>
-          </Box>
-        </SectionBox>
-
-        <SectionBox bgcolor="grey.100" width={{ xs: '100%' }} height="100%">
-          <MuiTable
-            columns={columns}
-            rows={rows}
-            renderRowIcon={(row) => {
-              const roleIcon = row.role === 'Admin' ? '🛡️' : '👀';
-              const statusIcon = row.status === 'Active' ? '✅' : '⏳';
-              return (
-                <span style={{ fontSize: '1rem' }}>
-                  {roleIcon} {statusIcon}
-                </span>
-              );
-            }}
-          />
-        </SectionBox>
-      </Box>
-    </DashboardLayout>
+          </SectionBox>
+        </Box>
+      </DashboardLayout>
+    </AppTheme>
   );
 }
