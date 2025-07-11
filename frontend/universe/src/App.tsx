@@ -7,6 +7,7 @@ import store from './store/store';
 import UniverseLogin from './system-parts/universe/SignIn';
 import ChangePassword from './system-parts/universe/ChangePassword';
 import MainDashboard from './system-parts/universe/MainDashboard';
+import FormBuilder from './system-parts/universe/FormBuilder';
 import ProtectedRoute from './system-parts/ProtectedRoute';
 
 const App: React.FC = () => {
@@ -25,6 +26,14 @@ const App: React.FC = () => {
                     </ProtectedRoute>
                 }
                 /> 
+              <Route
+                path="/universe/ds-code/forms-builder" 
+                element={
+                    <ProtectedRoute>
+                        <FormBuilder />
+                    </ProtectedRoute>
+                }
+                />
             </Routes>
         </Router>
         </Provider>
