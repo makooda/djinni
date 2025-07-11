@@ -101,7 +101,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       localStorage.setItem('refresh_token', refresh_token);
 
       dispatch(loginSuccess({ accessToken: access_token, refreshToken: refresh_token }));
-      navigate('/universe/dashboard');
+      navigate('/');
 
       setUnauthorizedError(false); // Clear unauthorized error if successful
 
@@ -137,7 +137,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               <PadlockIcon />
             </Box>
             <Typography variant="h6" sx={{ textAlign: 'center' }}>
-              Access The Universe
+              Enter Our world of Endless Possibilities 🌀
             </Typography>
 
             {unauthorizedError && (

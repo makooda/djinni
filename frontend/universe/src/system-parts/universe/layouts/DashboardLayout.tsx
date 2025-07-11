@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" sx={{ mr: 4 }}>
-            Djinni
+            🔮 Djinni
           </Typography>
 
           {/* Search Field */}
@@ -101,9 +101,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             pb: 4,
           }}
         >
-          {/* Breadcrumbs */}
-          <BreadcrumbsBar items={['Home', 'DS Code', 'Forms Builder']} />
-
+          
           {/* Right-Aligned Content Wrapper */}
           <Box
             sx={{

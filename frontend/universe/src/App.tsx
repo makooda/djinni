@@ -19,7 +19,7 @@ const App: React.FC = () => {
               <Route path="/universe/signin" element={<UniverseLogin />} /> 
               <Route path="/universe/change-password" element={<ChangePassword />} />
               <Route 
-                path="/universe/dashboard" 
+                path="/" 
                 element={
                     <ProtectedRoute>
                         <MainDashboard /> 
