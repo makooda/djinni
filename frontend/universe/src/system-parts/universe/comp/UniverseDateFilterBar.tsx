@@ -9,10 +9,10 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import TodayIcon from '@mui/icons-material/Today';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import EventNoteIcon from '@mui/icons-material/EventNote';
+import TodayIcon from '@mui/icons-material/TodayOutlined';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonthOutlined';
+import DateRangeIcon from '@mui/icons-material/DateRangeOutlined';
+import EventNoteIcon from '@mui/icons-material/EventNoteOutlined';
 
 interface Props {
   onDateFilterChange: (range: { start: Date | null; end: Date | null } | null) => void;
@@ -69,36 +69,100 @@ export default function DateFilterBar({ onDateFilterChange }: Props) {
 
   return (
     <Box display="flex" alignItems="center" gap={1}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 400, fontSize: 12 }}>
+        Date:
+      </Typography>
       <Tooltip title="Custom Date Range">
         <IconButton
+          sx={{ 
+              maxHeight: 30,
+              p: 0.3,
+              borderRadius: 0.5,              
+              fontWeight: 400, 
+              fontSize: 12,             
+              border: 'none', 
+              minWidth: 0, 
+              backgroundColor: 'transparent',
+              '&:hover': {
+                backgroundColor: 'grey.200',
+              },
+              '&:selected': {
+                backgroundColor: 'grey.200', 
+              }
+            }}
           onClick={handleCustomOpen}
           color={selected === 'custom' ? 'primary' : 'default'}
         >
-          <DateRangeIcon />
+          <DateRangeIcon fontSize='small' />
         </IconButton>
       </Tooltip>
       <Tooltip title="Today">
-        <IconButton
+        <IconButton 
+          sx={{ 
+            maxHeight: 30,
+            p: 0.3,
+            fontWeight:300,
+            borderRadius: 0.5,                          
+            border: 'none', 
+            minWidth: 0, 
+            backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: 'grey.200',
+            },
+            '&:selected': {
+              backgroundColor: 'grey.200', 
+            }
+          }}
           onClick={() => handleFilter('today')}
           color={selected === 'today' ? 'primary' : 'default'}
         >
-          <TodayIcon />
+          <TodayIcon  fontSize='small'/>
         </IconButton>
       </Tooltip>
       <Tooltip title="This Week">
         <IconButton
+        sx={{ 
+            maxHeight: 30,
+            p: 0.3,
+            borderRadius: 0.5,
+            fontWeight: 300,              
+            border: 'none', 
+            minWidth: 0, 
+            backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: 'grey.200',
+            },
+            '&:selected': {
+              backgroundColor: 'grey.200', 
+            }
+          }}
           onClick={() => handleFilter('week')}
           color={selected === 'week' ? 'primary' : 'default'}
         >
-          <EventNoteIcon />
+          <EventNoteIcon fontSize='small'/>
         </IconButton>
       </Tooltip>
       <Tooltip title="This Month">
         <IconButton
+          sx={{ 
+              maxHeight: 30,
+              p: 0.3,
+              borderRadius: 0.5,
+              fontWeight: 300,              
+              border: 'none', 
+              minWidth: 0, 
+              backgroundColor: 'transparent',
+              '&:hover': {
+                backgroundColor: 'grey.200',
+              },
+              '&:selected': {
+                backgroundColor: 'grey.200', 
+              }
+            }}
           onClick={() => handleFilter('month')}
           color={selected === 'month' ? 'primary' : 'default'}
         >
-          <CalendarMonthIcon />
+          <CalendarMonthIcon fontSize='small'/>
         </IconButton>
       </Tooltip>
 

@@ -9,6 +9,7 @@ type TabItem = {
   label: string;
   icon?: React.ReactElement;
   value: string;
+  hidden?: boolean;
 };
 
 interface UniverseIconTabsProps {
@@ -22,6 +23,8 @@ export default function IconTabs({ items, value, onChange, children }: UniverseI
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     onChange(newValue);
   };
+
+  const visibleTabs = items.filter(tab => !tab.hidden); // Filter only visible ones
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -41,10 +44,7 @@ export default function IconTabs({ items, value, onChange, children }: UniverseI
               textTransform: 'none',
               fontSize: 12,
               fontWeight: 400,
-              px: 0.3,
-              py: 0.3,
-              pt: 0.3,
-              pb: 0.3,
+              p:0.3,
               borderRadius: 0.5,
               //backgroundColor: 'grey.100',
               transition: 'all 0.2s ease-in-out',
@@ -61,7 +61,7 @@ export default function IconTabs({ items, value, onChange, children }: UniverseI
             },
           }}
         >
-          {items.map((tab) => (
+          {visibleTabs.map((tab) => (
             <Tab
               key={tab.value}
               icon={tab.icon}
@@ -76,10 +76,15 @@ export default function IconTabs({ items, value, onChange, children }: UniverseI
       {/* Content Area */}
       <Box
         sx={{
-          flexGrow: 1,
-          overflow: 'auto',
-          backgroundColor: '#fff',
-          p: 3,
+            flexGrow: 1,
+            overflow: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            backgroundColor: 'grey.100',
+            borderRadius: 0.5,
+            mt: 1,
+            p: 0.3,
         }}
       >
         {children}

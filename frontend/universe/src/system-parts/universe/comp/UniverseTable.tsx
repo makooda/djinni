@@ -57,9 +57,14 @@ function DraggableTableHeader({
         const element = node as HTMLTableCellElement | null;
         ref(drop(element));
       }}
-      sx={{ borderRight: '1px solid #ccc', cursor: 'move' }}
-      sortDirection={sortConfig?.key === col.key ? sortConfig.direction : false}
-    >
+      sx={{ 
+        borderRight: '1px solid #ccc', 
+        cursor: 'move',        
+        fontSize: 'small',
+        fontWeight: 400,
+      }}
+        sortDirection={sortConfig?.key === col.key ? sortConfig.direction : false}
+      >
       <TableSortLabel
         active={sortConfig?.key === col.key}
         direction={sortConfig?.direction === 'asc' ? 'asc' : 'desc'}
@@ -130,10 +135,9 @@ const UniverseTable: React.FC<UniverseTableProps> = ({ columns: initialColumns, 
       : String(valB).localeCompare(String(valA));
   });
 
-  const getCellSx = (isLast = false) => ({
-    paddingY: 0.25,
-    paddingX: 1,
-    fontSize: '0.85rem',
+  const getCellSx = (isLast = false) => ({    
+    fontSize: 'small',
+    fontWeight: 300,
     borderBottom: '1px solid #e0e0e0',
     borderRight: isLast ? 'none' : '1px solid #e0e0e0',
   });
@@ -163,8 +167,8 @@ const UniverseTable: React.FC<UniverseTableProps> = ({ columns: initialColumns, 
         component={Paper}
         elevation={2}
         sx={{
-          borderRadius: 2,
-          overflow: 'hidden',
+          borderRadius: 0.5,
+          overflow: 'auto',
           backgroundColor: '#fafafa',
           border: '1px solid #e0e0e0',
         }}
@@ -240,11 +244,11 @@ const UniverseTable: React.FC<UniverseTableProps> = ({ columns: initialColumns, 
 
         <Table size="small">
           <TableHead
-            sx={{
+            sx={{                           
               backgroundColor: '#2c2c2c',
               '& .MuiTableCell-root': {
                 color: '#ffffff',
-                fontWeight: 'bold',
+                fontWeight: 400,
                 transition: 'background-color 0.2s ease',
                 '&:hover': {
                   backgroundColor: '#3a3a3a',
@@ -264,18 +268,31 @@ const UniverseTable: React.FC<UniverseTableProps> = ({ columns: initialColumns, 
               },
             }}
           >
-            <TableRow sx={{ height: '30px' }}>
-              <TableCell sx={{ ...getCellSx(), width: '36px' }}>
+            <TableRow sx={{
+              padding: 0,
+              height: 40,
+             }}>
+              <TableCell 
+                sx={{ 
+                ...getCellSx(), 
+                padding: 0,
+                textAlign: 'center',
+                }}>
+
                 <Checkbox
-                  checked={isAllSelected()}
-                  onChange={(e) => handleSelectAll(e.target.checked)}
+                  sx={{   
+                    padding: 0.5,                                                    
+                    fontSize: 'small',
+                  }}
+                    checked={isAllSelected()}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
                 />
               </TableCell>
-              <TableCell sx={getCellSx()}></TableCell>
+              <TableCell sx={getCellSx()}> - </TableCell>
               {columns
                 .filter(col => !visibleColumns || visibleColumns.includes(col.key))
                 .map((col, index) => (
-                  <DraggableTableHeader
+                  <DraggableTableHeader                  
                     key={col.key}
                     col={col}
                     index={index}
@@ -284,7 +301,7 @@ const UniverseTable: React.FC<UniverseTableProps> = ({ columns: initialColumns, 
                     handleSort={handleSort}
                   />
               ))}
-              <TableCell sx={getCellSx(true)}>Actions</TableCell>
+              <TableCell sx={getCellSx(true)}>-</TableCell>
             </TableRow>
           </TableHead>
 
@@ -303,31 +320,46 @@ const UniverseTable: React.FC<UniverseTableProps> = ({ columns: initialColumns, 
                           handleRowAction('Execute', 'Now');
                         }
                       }}
-                      sx={{
-                        height: '40px',
+                      sx={{                        
                         backgroundColor: idx % 2 === 0 ? '#f9f9f9' : '#fff',
                         cursor: 'pointer',
                       }}
                     >
 
-                    <TableCell sx={{ ...getCellSx(), width: '40px' }}>
+                    <TableCell sx={{ ...getCellSx(), width: '20px', p:'0px', textAlign: 'center' }}>
                       <Checkbox
+                      sx={{
+                        padding: 0.5,
+                        fontSize: 'small',                        
+                      }}
                         checked={selected.includes(globalIndex)}
                         onChange={() => handleSelect(globalIndex)}
                       />
                     </TableCell>
-                    <TableCell sx={{ ...getCellSx(), width: '40px' }}>
+                    <TableCell sx={{ ...getCellSx(), width: '20px', p:'0px', textAlign: 'center' }}>
                       {renderRowIcon?.(row, globalIndex)}
                     </TableCell>
                     {columns
                       .filter((col) => !visibleColumns || visibleColumns.includes(col.key))
                       .map((col) => (
-                        <TableCell key={col.key} sx={getCellSx()}>
+                        <TableCell key={col.key} sx={{ ...getCellSx(), width: '25px', pl:'5px' }}>
                           {row[col.key] ?? ''}
                         </TableCell>
                     ))}
-                    <TableCell sx={getCellSx(true)}>
-                      <IconButton size="small" onClick={(e) => handleMenuOpen(e, globalIndex)}>
+                    <TableCell sx={{ ...getCellSx(true), width: '10px', textAlign: 'center', p:'3px' }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleMenuOpen(e, globalIndex)}
+                        sx={{
+                          p: 0, 
+                          border: 'none', 
+                          minWidth: 0, 
+                          backgroundColor: 'transparent', 
+                          '&:hover': {
+                            backgroundColor: 'transparent', 
+                          },
+                        }}
+                      >
                         <MoreVertIcon fontSize="small" />
                       </IconButton>
                     </TableCell>

@@ -74,7 +74,7 @@ export default function MainDashboard() {
         
         <Box height={{ xs: 'auto', sm: '100%' }}>
           <PageHeader title="All Activities" subtitle="Logs and process list" />
-          <SectionBox height={200}>
+          <SectionBox >
             <Box display="flex" height="100%">
               {/* Left 25% */}
               <Box flex={1} display="flex" alignItems="center" justifyContent="flex-start">
@@ -83,14 +83,14 @@ export default function MainDashboard() {
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    width: '100%',
-                    maxWidth: 300,
+                    width: '100%',                    
+                    maxHeight: 30,
                   }}
                 >
-                  <SearchIcon sx={{ color: 'grey.600', mr: 0.5, ml: 0.5 }} />
+                  <SearchIcon sx={{ color: 'grey.600', mr: 0.5, ml: 0.5, fontSize: 'small' }} />
                   <InputBase
                     placeholder="Search..."
-                    sx={{ flex: 1 }}
+                    sx={{ flex: 1 , fontSize: 12, fontWeight:400, height: 30, p: 0.5 , borderRadius: 0.5 }}
                     inputProps={{ 'aria-label': 'search' }}
                   />
                 </Paper>
@@ -100,7 +100,12 @@ export default function MainDashboard() {
               <Divider
                 orientation="vertical"
                 flexItem
-                sx={{ bgcolor: 'grey.700', marginX: '10px' }}
+                sx={{
+                  bgcolor: 'grey.300',
+                  mx: '10px',
+                  mt: '0.2%',
+                  height: 25,
+                }}
               />
 
               {/* Middle 50% */}
@@ -109,8 +114,7 @@ export default function MainDashboard() {
                 <TableColumnsSelector
                   columns={columns}
                   visibleColumns={visibleColumns}
-                  onChange={setVisibleColumns}
-                  
+                  onChange={setVisibleColumns}                  
                 />
                 <Box sx={{ width: 8 }} />
 
@@ -137,7 +141,12 @@ export default function MainDashboard() {
               <Divider
                 orientation="vertical"
                 flexItem
-                sx={{ bgcolor: 'grey.700', marginRight: '10px' }}
+                sx={{
+                  bgcolor: 'grey.300',
+                  mx: '10px',
+                  mt: '0.2%',
+                  height: 25,
+                }}
               />
 
               {/* Right 25% */}
@@ -165,8 +174,8 @@ export default function MainDashboard() {
                 const roleIcon = row.role === 'Admin' ? '🛡️' : '👀';
                 const statusIcon = row.status === 'Active' ? '✅' : '⏳';
                 return (
-                  <span style={{ fontSize: '0.5rem' }}>
-                    {roleIcon} {statusIcon}
+                  <span style={{ fontSize: 'small' }}>
+                    {statusIcon}
                   </span>
                 );
               }}

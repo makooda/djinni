@@ -58,8 +58,8 @@ export default function WorkflowFilterDropdown({
 
   return (
     <Box display="flex" alignItems="center" gap={1}>
-      <Typography variant="subtitle2" color="text.secondary">
-        Filter Workflows:
+    <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 400, fontSize: 12 }}>
+        Processes:
       </Typography>
       <Button
         variant="outlined"
@@ -68,7 +68,10 @@ export default function WorkflowFilterDropdown({
         size="small"
         sx={{
           textTransform: 'none',
-          fontWeight: 500,
+          fontWeight: 400,
+          fontSize: 12,
+          maxHeight: 30,
+          borderRadius: 0.5,
           color: 'text.primary',
           borderColor: 'grey.400',
           '&:hover': {
@@ -77,7 +80,7 @@ export default function WorkflowFilterDropdown({
           },
         }}
       >
-        Workflows
+        Select
       </Button>
 
       <Menu

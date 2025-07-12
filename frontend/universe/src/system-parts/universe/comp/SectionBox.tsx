@@ -17,11 +17,13 @@ export default function SectionBox({
     <Box
       sx={{
         bgcolor,
-        borderRadius: 2,
-        p: 1.2,
+        borderRadius: 0.5,
+        p: 0.5,
         mb: 1,
         width,
+        maxheight: '40',
         mx: 'auto', // auto horizontal margin centers it
+        verticalAlign: 'middle',
       }}
     >
       {children}
