@@ -27,7 +27,7 @@ const tabItems = [
   { label: 'Dashboard', icon: <DashboardIcon fontSize="small" />, value: 'dashboard', hidden: false},
   { label: 'Builder', icon: <BuildIcon fontSize="small" />, value: 'builder', hidden: false },
   { label: 'Configure', icon: <SettingsIcon fontSize="small" />, value: 'config', hidden: false },
-  { label: 'Code View', icon: <CodeIcon fontSize="small" />, value: 'code-view', hidden: false }
+  { label: 'Code View', icon: <CodeIcon fontSize="small" />, value: 'code-view', hidden: true }
 ];
 
 export default function FormBuilder() {   
@@ -64,7 +64,11 @@ const renderTabContent = () => {
         <Box height={{ xs: 'auto', sm: '100%' }}>
           <PageHeader title="Djinni Studio Code" subtitle="Form Builder" /> 
 
-          <FormBuilderIconTabs items={tabItems} value={activeTab} onChange={setActiveTab}>
+          <FormBuilderIconTabs 
+                items={tabItems} 
+                value={activeTab} 
+                onChange={setActiveTab} 
+                tabPosition="left">
             <Box sx={{ p: 0.5, height: '100%'}}>
               {renderTabContent()}
             </Box>

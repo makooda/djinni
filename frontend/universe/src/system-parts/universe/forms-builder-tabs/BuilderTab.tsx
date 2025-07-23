@@ -2,6 +2,26 @@ import React from 'react';
 import { Box, Paper, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FormsTreeViewManager from '../forms-builder-components/FormsTreeViewManager';
+import FormsDesigner from '../forms-builder-components/FormsDesigner';
+
+const formsDataHierarchy = [
+  {
+    id: 'group-1',
+    label: 'Claims',
+    type: 'group' as const,
+    children: [
+      {
+        id: 'group-1-1',
+        label: 'Sub Claims',
+        type: 'group' as const,
+        children: [
+          { id: 'form-1', label: 'Claim Form A', type: 'form' as const },
+        ],
+      },
+      { id: 'form-2', label: 'Claim Form B', type: 'form' as const },
+    ],
+  },
+];
 
 export default function BuilderTab() {
   return (
@@ -14,10 +34,10 @@ export default function BuilderTab() {
         backgroundColor: 'grey.100',
       }}
     >
-      {/* Left Column - Palette or Settings */}
+      {/* Left Column - Form Grouping */}
       <Box
         sx={{
-          width: '20%',
+          width: '25%',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -48,26 +68,21 @@ export default function BuilderTab() {
           <SearchIcon sx={{ fontSize: 14, color: 'grey.600', mr: 1 }} />
           <InputBase
             placeholder="Search components"
-            sx={{ 
-              flex: 1,
-              fontSize: 12, 
-              fontWeight: 400              
-             }}
+            sx={{ flex: 1, fontSize: 12, fontWeight: 400 }}
             inputProps={{ 'aria-label': 'search form components' }}
           />
         </Paper>
 
-        {/* You can put your form elements palette here */}
-        <Box>
-          <FormsTreeViewManager />
+        {/* Form Tree View */}
+        <Box sx={{ flex: 1, overflowY: 'auto' }}>
+          <FormsTreeViewManager initialData={formsDataHierarchy} />
         </Box>
-
       </Box>
 
-      {/* Right Column - Preview or Canvas */}
+      {/* Right Column - Canvas + Controls */}
       <Box
         sx={{
-          width: '80%',
+          width: '85%',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -77,8 +92,11 @@ export default function BuilderTab() {
           backgroundColor: 'white',
         }}
       >
-        {/* This is where the form builder preview goes */}
-        <Box>Right</Box>
+
+        {/* Forms Designer Canvas */}
+        <Box sx={{ flex: 1, p: 0.3 }}>
+          <FormsDesigner />
+        </Box>
       </Box>
     </Box>
   );

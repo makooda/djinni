@@ -3,3 +3,4 @@ __pychache__
 postgres_data
 pwd
 package-lock.json
+postgres_data_*
