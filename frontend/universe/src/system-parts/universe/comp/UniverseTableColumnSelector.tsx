@@ -62,8 +62,8 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
 
   return (
     <Box display="flex" alignItems="center" gap={1}>
-      <Typography variant="subtitle2" color="text.secondary">
-        Show Columns:
+      <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 400, fontSize: 12 }}>
+        Columns:
       </Typography>
       <Button
         variant="outlined"
@@ -72,7 +72,10 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
         size="small"
         sx={{
           textTransform: 'none',
-          fontWeight: 500,
+          fontWeight: 400,
+          fontSize: 12,
+          maxHeight:30,
+          borderRadius: 0.5,
           color: 'text.primary',
           borderColor: 'grey.400',
           '&:hover': {
@@ -81,7 +84,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
           },
         }}
       >
-        Columns
+        Select
       </Button>
 
       <Menu

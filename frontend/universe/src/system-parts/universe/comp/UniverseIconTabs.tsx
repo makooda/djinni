@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  Tabs,
-  Tab,
-  Box,
-} from '@mui/material';
+import { Tabs, Tab, Box } from '@mui/material';
 
 type TabItem = {
   label: string;
   icon?: React.ReactElement;
   value: string;
+  hidden?: boolean;
 };
 
 interface UniverseIconTabsProps {
@@ -16,17 +13,36 @@ interface UniverseIconTabsProps {
   value: string;
   onChange: (value: string) => void;
   children?: React.ReactNode;
+  tabPosition?: 'left' | 'right'; // 👈 NEW PROP
 }
 
-export default function IconTabs({ items, value, onChange, children }: UniverseIconTabsProps) {
+export default function IconTabs({
+  items,
+  value,
+  onChange,
+  children,
+  tabPosition = 'left', // default to left
+}: UniverseIconTabsProps) {
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     onChange(newValue);
   };
 
+  const visibleTabs = items.filter(tab => !tab.hidden);
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Tab Strip */}
-      <Box sx={{ backgroundColor: 'grey.100', px: 0.3, pt: 0.3, pb: 0.3, py:0.3, borderRadius: 0.5 }}>
+      <Box
+        sx={{
+          backgroundColor: 'grey.100',
+          px: 0.3,
+          pt: 0.3,
+          pb: 0.3,
+          borderRadius: 0.5,
+          display: 'flex',
+          justifyContent: tabPosition === 'right' ? 'flex-end' : 'flex-start',
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
@@ -41,12 +57,8 @@ export default function IconTabs({ items, value, onChange, children }: UniverseI
               textTransform: 'none',
               fontSize: 12,
               fontWeight: 400,
-              px: 0.3,
-              py: 0.3,
-              pt: 0.3,
-              pb: 0.3,
+              p: 0.3,
               borderRadius: 0.5,
-              //backgroundColor: 'grey.100',
               transition: 'all 0.2s ease-in-out',
               '& .MuiTab-iconWrapper': {
                 fontSize: 12,
@@ -61,7 +73,7 @@ export default function IconTabs({ items, value, onChange, children }: UniverseI
             },
           }}
         >
-          {items.map((tab) => (
+          {visibleTabs.map((tab) => (
             <Tab
               key={tab.value}
               icon={tab.icon}
@@ -78,8 +90,13 @@ export default function IconTabs({ items, value, onChange, children }: UniverseI
         sx={{
           flexGrow: 1,
           overflow: 'auto',
-          backgroundColor: '#fff',
-          p: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          backgroundColor: 'grey.100',
+          borderRadius: 0.5,
+          mt: 1,
+          p: 0.3,
         }}
       >
         {children}

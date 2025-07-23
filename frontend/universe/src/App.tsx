@@ -9,34 +9,38 @@ import ChangePassword from './system-parts/universe/ChangePassword';
 import MainDashboard from './system-parts/universe/MainDashboard';
 import FormBuilder from './system-parts/universe/FormBuilder';
 import ProtectedRoute from './system-parts/ProtectedRoute';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const App: React.FC = () => {
   return (
     <AppTheme mode="light">
       <Provider store={store}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Router>
-            <Routes>      
-              <Route path="/universe/signin" element={<UniverseLogin />} /> 
+            <Routes>
+              <Route path="/universe/signin" element={<UniverseLogin />} />
               <Route path="/universe/change-password" element={<ChangePassword />} />
-              <Route 
-                path="/" 
-                element={
-                    <ProtectedRoute>
-                        <MainDashboard /> 
-                    </ProtectedRoute>
-                }
-                /> 
               <Route
-                path="/universe/ds-code/forms-builder" 
+                path="/"
                 element={
-                    <ProtectedRoute>
-                        <FormBuilder />
-                    </ProtectedRoute>
+                  <ProtectedRoute>
+                    <MainDashboard />
+                  </ProtectedRoute>
                 }
-                />
+              />
+              <Route
+                path="/universe/ds-code/forms-builder"
+                element={
+                  <ProtectedRoute>
+                    <FormBuilder />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
-        </Router>
-        </Provider>
+          </Router>
+        </LocalizationProvider>
+      </Provider>
     </AppTheme>
   );
 };

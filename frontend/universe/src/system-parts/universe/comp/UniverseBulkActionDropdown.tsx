@@ -37,7 +37,10 @@ export default function UniverseBulkActionDropdown({ onActionSelect, disabled }:
   };
 
   return (
-    <Box>
+    <Box display="flex" alignItems="center" gap={1}>
+      <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 400, fontSize: 12 }}>
+        Actions
+      </Typography>
       <Button
         variant="outlined"
         size="small"
@@ -46,8 +49,11 @@ export default function UniverseBulkActionDropdown({ onActionSelect, disabled }:
         onClick={handleOpen}
         sx={{
           textTransform: 'none',
-          fontWeight: 500,
+          fontSize: 12,
+          fontWeight: 400,
+          maxHeight: 30,
           color: 'text.primary',
+          borderRadius: 0.5,
           borderColor: 'grey.400',
           '&:hover': {
             borderColor: 'primary.main',
@@ -55,7 +61,7 @@ export default function UniverseBulkActionDropdown({ onActionSelect, disabled }:
           },
         }}
       >
-        Actions
+        Select
       </Button>
 
       <Menu

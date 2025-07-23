@@ -87,7 +87,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       setLoading(true);
 
     try {
-      const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
+      const userServiceBaseUrl = import.meta.env.VITE_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
       const signinEndpoint = 'api/signin/';
       
       const response = await axios.post<{ access_token: string; refresh_token: string }>(`${userServiceBaseUrl}${signinEndpoint}`, { username, password }, {

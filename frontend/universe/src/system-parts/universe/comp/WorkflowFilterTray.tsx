@@ -22,7 +22,7 @@ const WorkflowFilterTray: React.FC<WorkflowFilterTrayProps> = ({ selectedFilters
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-      <Box sx={{ fontWeight: 'bold', mr: 1 }}></Box>
+      <Box sx={{ fontWeight: 400 , mr: 1, fontSize:12}}> Actions </Box>
       {workflowTypes.map(({ key, label }) => (
         <Chip
           key={key}

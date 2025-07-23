@@ -12,7 +12,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import ProfileMenu from '../comp/ProfileMenu';
 import SideMenu from '../comp/SideMenu';
-import BreadcrumbsBar from '../comp/BreadcrumbsBar';
 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
