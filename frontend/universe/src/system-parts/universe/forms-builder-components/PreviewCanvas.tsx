@@ -8,7 +8,7 @@ export default function PreviewCanvas() {
       variant="outlined"
       sx={{
         flexGrow: 1,
-        p: 3,
+        p: 1,
         backgroundColor: 'white',
         display: 'flex',
         flexDirection: 'column',

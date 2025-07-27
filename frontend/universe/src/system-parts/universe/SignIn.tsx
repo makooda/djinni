@@ -1,6 +1,17 @@
 import React from 'react';
-import { useDispatch} from 'react-redux';
-import { Box, Button, Card as MuiCard, CssBaseline, FormControl, FormLabel, TextField, Typography, Stack, CircularProgress } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import {
+  Box,
+  Button,
+  Card as MuiCard,
+  CssBaseline,
+  FormControl,
+  FormLabel,
+  TextField,
+  Typography,
+  Stack,
+  CircularProgress,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +28,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: 'auto',
+  borderRadius: 0.5,          // consistent borderRadius
   [theme.breakpoints.up('sm')]: {
     maxWidth: '450px',
   },
@@ -25,6 +37,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
 const SignInContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100%',
   padding: theme.spacing(2),
+  position: 'relative',
   '&::before': {
     content: '""',
     display: 'block',
@@ -47,12 +60,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-
   const [unauthorizedError, setUnauthorizedError] = React.useState(false);
   const [unauthorizedErrorMessage, setUnauthorizedErrorMessage] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-
-
 
   const validateInputs = () => {
     let isValid = true;
@@ -79,48 +89,32 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!validateInputs()) {
-      return; // Prevent submission if inputs are invalid
-    }
-
-      setLoading(true);
+    if (!validateInputs()) return;
+    setLoading(true);
 
     try {
-      const userServiceBaseUrl = import.meta.env.VITE_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
-      const signinEndpoint = 'api/signin/';
-      
-      const response = await axios.post<{ access_token: string; refresh_token: string }>(`${userServiceBaseUrl}${signinEndpoint}`, { username, password }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const { access_token, refresh_token }: { access_token: string; refresh_token: string } = response.data;
+      const base = import.meta.env.VITE_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
+      const { data } = await axios.post<{ access_token: string; refresh_token: string }>(
+        `${base}api/signin/`,
+        { username, password },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      const { access_token, refresh_token } = data;
       localStorage.setItem('access_token', access_token);
       localStorage.setItem('refresh_token', refresh_token);
-
       dispatch(loginSuccess({ accessToken: access_token, refreshToken: refresh_token }));
       navigate('/');
-
-      setUnauthorizedError(false); // Clear unauthorized error if successful
-
+      setUnauthorizedError(false);
     } catch (error: any) {
-      console.error(error);
-      // Check for password expiration or first login redirect condition
-      if (error.response && error.response.status === 403) {
-          const errorMessage = error.response.data.detail;
-
-          if (errorMessage.includes('Password update required')) {
-            navigate('universe/update-password'); // Redirect to update password page
-            return;
-          }
-        }
+      if (error.response?.status === 403 && error.response.data.detail.includes('Password update required')) {
+        navigate('universe/update-password');
+        return;
+      }
       setUnauthorizedError(true);
       setUnauthorizedErrorMessage('Unauthorized User, Try Again');
       dispatch(loginFailure('Unauthorized User, Try Again'));
-    } finally{
-       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,32 +123,51 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <Box sx={{ position: 'fixed', top: '1rem', right: '1rem' }}>
-          <ColorModeSelect onThemeChange={(theme) => console.log(`Theme changed to: ${theme}`)} />
+          <ColorModeSelect onThemeChange={(theme) => console.log(`Theme: ${theme}`)} />
         </Box>
+
         <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
           <Card variant="outlined">
-            <Box display="flex" justifyContent="center" mb={2}>
+            <Box display="flex" justifyContent="center" mb={1}>
               <PadlockIcon />
             </Box>
-            <Typography variant="h6" sx={{ textAlign: 'center' }}>
-              Enter Our world of Endless Possibilities 🌀
+
+            <Typography
+              variant="h6"
+              sx={{ textAlign: 'center', fontSize: 14, fontWeight: 500, p: 0.3 }}
+            >
+              Enter Our World of Endless Possibilities 🌀
             </Typography>
 
             {unauthorizedError && (
-              <Typography variant="body2" color="error" sx={{ textAlign: 'center' }}>
+              <Typography
+                variant="body2"
+                color="error"
+                sx={{ textAlign: 'center', fontSize: 12, fontWeight: 400, p: 0.3 }}
+              >
                 {unauthorizedErrorMessage}
               </Typography>
             )}
 
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+            >
               <FormControl>
-                <FormLabel htmlFor="username">Username*</FormLabel>
+                <FormLabel
+                  htmlFor="username"
+                  sx={{ fontSize: 13, fontWeight: 500, p: 0.3 }}
+                >
+                  Username*
+                </FormLabel>
                 <TextField
+                  id="username"
+                  name="username"
                   error={usernameError}
                   helperText={usernameErrorMessage}
-                  id="username"
                   type="text"
-                  name="username"
                   placeholder="johndoe"
                   autoComplete="username"
                   autoFocus
@@ -163,33 +176,61 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   required
                   fullWidth
                   variant="outlined"
+                  sx={{
+                    borderRadius: 0.5,
+                    p: 0.3,
+                    '& .MuiInputBase-input': { fontSize: 13, fontWeight: 400 },
+                    '& .MuiOutlinedInput-notchedOutline': { borderRadius: 0.5 },
+                  }}
                 />
               </FormControl>
+
               <FormControl>
-                <FormLabel htmlFor="password">Password*</FormLabel>
+                <FormLabel
+                  htmlFor="password"
+                  sx={{ fontSize: 13, fontWeight: 500, p: 0.3 }}
+                >
+                  Password*
+                </FormLabel>
                 <TextField
+                  id="password"
+                  name="password"
                   error={passwordError}
                   helperText={passwordErrorMessage}
-                  name="password"
-                  placeholder="••••••"
                   type="password"
-                  id="password"
+                  placeholder="••••••"
                   autoComplete="current-password"
                   required
                   fullWidth
                   variant="outlined"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  sx={{
+                    borderRadius: 0.5,
+                    p: 0.3,
+                    '& .MuiInputBase-input': { fontSize: 13, fontWeight: 400 },
+                    '& .MuiOutlinedInput-notchedOutline': { borderRadius: 0.5 },
+                  }}
                 />
               </FormControl>
-              <Button 
-                  type="submit" 
-                  fullWidth 
-                  variant="contained"
-                  disabled={loading}
-                  startIcon={loading ? <CircularProgress size={20} sx={{ color: '#fff'}} /> : null }
-                  >
-                    {loading ? 'Signing In...': 'Sign in'}
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                disabled={loading}
+                startIcon={
+                  loading ? <CircularProgress size={20} sx={{ color: '#fff' }} /> : undefined
+                }
+                sx={{
+                  fontSize: 13,
+                  fontWeight: 500,
+                  textTransform: 'none',
+                  borderRadius: 0.5,
+                  p: 0.3,
+                }}
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
               </Button>
             </Box>
           </Card>
