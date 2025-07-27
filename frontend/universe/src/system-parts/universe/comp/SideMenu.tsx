@@ -18,7 +18,9 @@ import {
   Code,
   Build,
   Forum,
-  Description, // Description icon looks like a form/document
+  EditDocument,
+  EditAttributesOutlined,
+  DescriptionOutlined,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,7 +47,7 @@ type SideMenuProps = {
 
 const menuStructure: MenuSection[] = [
   {
-    header: 'System Administration',
+    header: 'System Configurations',
     items: [
       { label: 'Users', icon: <People />, path: '/home/users' },
       { label: 'Settings', icon: <Settings />, path: '/home/settings' },
@@ -65,12 +67,12 @@ const menuStructure: MenuSection[] = [
     ],
   },
   {
-    header: 'DS Code',
+    header: 'Admin. Workbench',
     items: [
       {
-        label: 'Forms Builder',
-        icon: <Description />,
-        path: '/universe/ds-code/forms-builder',
+        label: 'Forms Studio',
+        icon: <DescriptionOutlined />,
+        path: '/universe/admin-workbench/forms-builder',
       },
     ],
   },
@@ -107,13 +109,13 @@ export default function SideMenu({ open }: SideMenuProps) {
             <Typography
               variant="subtitle2"
               sx={{
-                pl: 0,
-                py: 0,
+                p:0.5,
                 color: 'grey.800',
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: '0.80rem',
                 textTransform: 'uppercase',
-                backgroundColor: 'grey.200',
+                backgroundColor: 'grey.300',
+                borderRadius: 0.5
               }}
             >
               {section.header}
@@ -141,7 +143,8 @@ export default function SideMenu({ open }: SideMenuProps) {
                         color: 'grey.700',
                         mr: 0,
                         '& svg': {
-                          fontSize: 15,
+                          fontSize: 14,
+                          fontWeight: 400
                         },
                       }}
                     >
@@ -149,9 +152,11 @@ export default function SideMenu({ open }: SideMenuProps) {
                     </ListItemIcon>
                     <ListItemText
                       primary={item.label}
-                      primaryTypographyProps={{
-                        fontSize: '0.85rem',
-                      }}
+                      sx={{
+                        fontSize: '0.7rem',
+                        fontWeight: '400',
+                      }} // Fix: Changed TypographyProps to primaryTypographyProps
+
                     />
                     {item.subItems &&
                       (openMenus[item.label] ? <ExpandLess /> : <ExpandMore />)}
@@ -172,7 +177,7 @@ export default function SideMenu({ open }: SideMenuProps) {
                           >
                             <ListItemText
                               primary={sub.label}
-                              primaryTypographyProps={{ fontSize: '0.80rem' }}
+                              sx={{ fontSize: '0.80rem' }}
                             />
                           </ListItemButton>
                         ))}

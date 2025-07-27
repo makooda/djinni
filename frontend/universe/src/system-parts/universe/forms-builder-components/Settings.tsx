@@ -5,7 +5,7 @@ export default function Settings() {
     return (
       <Box p={2}>
         <Typography variant="body2" color="text.secondary">
-          Select a control to view its settings.
+          Generic Settings Placeholder
         </Typography>
       </Box>
     );

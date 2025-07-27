@@ -56,20 +56,20 @@ const renderTabContent = () => {
         <BreadcrumbsBar
             items={[
                 { label: 'Home', path: '/' },
-                { label: 'DS Code', path: '/universe/ds-code' },
+                { label: 'Admin. Workbench' , path: '/universe/admin-workbench' },
                 { label: 'Forms Builder' }, // current page (no path)
             ]}
             />
         
         <Box height={{ xs: 'auto', sm: '100%' }}>
-          <PageHeader title="Djinni Studio Code" subtitle="Form Builder" /> 
+          <PageHeader title="🪄 Conjura Forms Studio" subtitle="Craft. Conjure. Control" /> 
 
           <FormBuilderIconTabs 
                 items={tabItems} 
                 value={activeTab} 
                 onChange={setActiveTab} 
                 tabPosition="left">
-            <Box sx={{ p: 0.5, height: '100%'}}>
+            <Box sx={{ p: 0.3, height: '100%'}}>
               {renderTabContent()}
             </Box>
             </FormBuilderIconTabs>

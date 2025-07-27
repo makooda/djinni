@@ -17,12 +17,12 @@ export default function PageHeader({
       <Typography
         align={align}
         gutterBottom
-        sx={{ fontWeight: 500, fontSize: '1.2rem', marginBottom:0 }}
+        sx={{ fontWeight: 500, fontSize: '1em', marginBottom:0 }}
       >
         {title}
       </Typography>
       {subtitle && (
-        <Typography variant="body1" align={align} color="text.secondary" sx={{fontWeight:400, fontSize:'0.8rem'}}>
+        <Typography variant="body1" align={align} color="text.secondary" sx={{fontWeight:400, fontSize:'0.7em'}}>
           {subtitle}
         </Typography>
       )}

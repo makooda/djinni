@@ -30,7 +30,7 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/universe/ds-code/forms-builder"
+                path="/universe/admin-workbench/forms-builder"
                 element={
                   <ProtectedRoute>
                     <FormBuilder />
