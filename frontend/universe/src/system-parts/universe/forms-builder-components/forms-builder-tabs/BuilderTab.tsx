@@ -10,8 +10,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import FormsTreeViewManager from '../forms-builder-components/FormsTreeViewManager';
-import FormsDesigner from '../forms-builder-components/FormsDesigner';
+import FormsTreeViewManager from '../FormsTreeViewManager';
+import FormsDesigner from '../FormsDesigner';
 
 const formsDataHierarchy = [
   {
@@ -37,7 +37,6 @@ export default function BuilderTab() {
     <Box
       sx={{
         display: 'flex',
-        height: '100%',
         width: '100%',
         overflow: 'hidden',
         backgroundColor: 'grey.100',
@@ -49,7 +48,7 @@ export default function BuilderTab() {
         sx={{
           position: 'absolute',
           top: '50%',
-          left: showLeftPanel ? 235 : 0,
+          left: showLeftPanel ? 0 : 0,
           transform: 'translateY(-50%)',
           zIndex: 1000,
         }}
@@ -60,10 +59,11 @@ export default function BuilderTab() {
             disableRipple
               disableFocusRipple
               sx={{
-                p: 0.5,
-                backgroundColor: 'transparent',
-                border: 'none',
-                borderRadius: 0,
+                height: 30,
+                width: 30,
+                backgroundColor: 'grey.50',
+                border: '1px solid #grey.300',
+                borderRadius: 50,
                 boxShadow: 'none',
                 minWidth: 'auto',
                 '&:hover': {
@@ -83,7 +83,6 @@ export default function BuilderTab() {
         <Box
           sx={{
             width: 250,
-            height: '100%',
             display: 'flex',
             flexDirection: 'column',
             p: 0.3,
@@ -130,7 +129,6 @@ export default function BuilderTab() {
       <Box
         sx={{
           flex: 1,
-          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           p: 0.3,

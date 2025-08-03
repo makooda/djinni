@@ -17,7 +17,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import ArticleIcon from '@mui/icons-material/ArticleOutlined';
 import MoreHorizontalEllipsis from '@mui/icons-material/MoreHorizOutlined';
 import RightDockedModal from '../comp/RightDockModal';
-import AddGenericFormComponent from '../forms-builder-tabs/forms/AddGenericFormComponent';
+import AddGenericFormComponent from './forms-builder-tabs/forms/AddGenericFormComponent';
 
 type FormNode = {
   id: string;
@@ -132,7 +132,6 @@ export default function FormsTreeViewManager({ initialData = [] }: FormsTreeView
                 alignItems: 'center',
                 gap: 0.5,
                 cursor: isGroup ? 'pointer' : 'default',
-                height: 30,
               }}
             >
               {isGroup ? (

@@ -86,6 +86,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content */}
       <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Side Menu */}
+        
         <SideMenu open={menuOpen} />
 
         {/* Page Content */}
@@ -93,36 +94,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           sx={{
             flex: 1,
             overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
             maxHeight: 'calc(100vh - 64px - 48px)', // Adjust for header and footer
-            pt: 0,
-            pb: 4,
           }}
         >
           
           {/* Right-Aligned Content Wrapper */}
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-start', 
               px: { xs: 0, md: 1 }, // some padding
               mt: 1,
             }}
           >
-            <Box
-              sx={{
-                width: { xs: '100%', sm: '100%', md: '90%', lg: '100%', xl: '100%' },
-                maxWidth: '100%',
-              }}
-            >
+            <Box>
               {children}
             </Box>
           </Box>
         </Box>
       </Box>
-
-      {/* Spacer to push footer to bottom */}
 
       {/* Docked Footer */}
       <Box

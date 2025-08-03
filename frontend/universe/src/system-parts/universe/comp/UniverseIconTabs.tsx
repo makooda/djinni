@@ -13,7 +13,7 @@ interface UniverseIconTabsProps {
   value: string;
   onChange: (value: string) => void;
   children?: React.ReactNode;
-  tabPosition?: 'left' | 'right'; // 👈 NEW PROP
+  tabPosition?: 'left' | 'right'; 
 }
 
 export default function IconTabs({
@@ -21,13 +21,14 @@ export default function IconTabs({
   value,
   onChange,
   children,
-  tabPosition = 'left', // default to left
+  tabPosition = 'left', // default to true
 }: UniverseIconTabsProps) {
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     onChange(newValue);
   };
 
   const visibleTabs = items.filter(tab => !tab.hidden);
+  const panels = React.Children.toArray(children);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -49,7 +50,7 @@ export default function IconTabs({
           variant="scrollable"
           scrollButtons="auto"
           textColor="primary"
-          indicatorColor="primary"
+          indicatorColor="primary"         
           sx={{
             '& .MuiTabs-flexContainer': { gap: 0.5 },
             '& .MuiTab-root': {
@@ -86,20 +87,27 @@ export default function IconTabs({
       </Box>
 
       {/* Content Area */}
-      <Box
-        sx={{
-          flexGrow: 1,
-          overflow: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          backgroundColor: 'grey.100',
-          borderRadius: 0.5,
-          mt: 1,
-          p: 0.3,
-        }}
-      >
-        {children}
+      <Box sx={{ flexGrow: 1, position: 'relative' }}>
+        {visibleTabs.map((tab, idx) => (
+          <Box
+            key={tab.value}
+            hidden={value !== tab.value}
+            sx={{
+              position: value === tab.value ? 'static' : 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              overflow: 'auto',
+              backgroundColor: 'grey.100',
+              borderRadius: 0.5,
+              mt: 0.3,
+              p: 0.3,
+            }}
+          >
+            {panels[idx]}
+          </Box>
+        ))}
       </Box>
     </Box>
   );

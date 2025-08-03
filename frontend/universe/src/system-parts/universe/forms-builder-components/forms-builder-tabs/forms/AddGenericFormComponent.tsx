@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button} from '@mui/material';
-import UniverseTextField from '../../comp/form-controls/UniverseTextField';
-import UniverseSelect from '../../comp/form-controls/UniverseSelect';
-import UniverseCheckbox from '../../comp/form-controls/UniverseCheckbox';
-import UniverseRadio from '../../comp/form-controls/UniverseRadio';
-import { UniverseTextArea } from '../../comp/form-controls/UniverseTextArea';
-import { UniverseSwitch } from '../../comp/form-controls/UniverseSwitch';
-import UniverseDatePicker from '../../comp/form-controls/UniverseDatePicker';
+import UniverseTextField from '../../../comp/form-controls/UniverseTextField';
+import UniverseSelect from '../../../comp/form-controls/UniverseSelect';
+import UniverseCheckbox from '../../../comp/form-controls/UniverseCheckbox';
+import UniverseRadio from '../../../comp/form-controls/UniverseRadio';
+import { UniverseTextArea } from '../../../comp/form-controls/UniverseTextArea';
+import { UniverseSwitch } from '../../../comp/form-controls/UniverseSwitch';
+import UniverseDatePicker from '../../../comp/form-controls/UniverseDatePicker';
 
 export default function AddGenericFormComponent({ item, onSubmit }: { item: any, onSubmit: () => void }) {
   const [defaultValue, setDefaultValue] = useState(item?.label || '');

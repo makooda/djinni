@@ -18,10 +18,10 @@ import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 import BuildIcon from '@mui/icons-material/BuildOutlined';
 import CodeIcon from '@mui/icons-material/CodeOutlined';
 
-import CodeTab from './forms-builder-tabs/CodeTab';
-import ConfigTab from './forms-builder-tabs/ConfigTab';
-import DashboardTab from './forms-builder-tabs/DashboardTab';
-import BuilderTab from './forms-builder-tabs/BuilderTab';
+import CodeTab from './forms-builder-components/forms-builder-tabs/CodeTab';
+import ConfigTab from './forms-builder-components/forms-builder-tabs/ConfigTab';
+import DashboardTab from './forms-builder-components/forms-builder-tabs/DashboardTab';
+import BuilderTab from './forms-builder-components/forms-builder-tabs/BuilderTab';
 
 const tabItems = [
   { label: 'Dashboard', icon: <DashboardIcon fontSize="small" />, value: 'dashboard', hidden: false},
@@ -68,10 +68,28 @@ const renderTabContent = () => {
                 items={tabItems} 
                 value={activeTab} 
                 onChange={setActiveTab} 
-                tabPosition="left">
-            <Box sx={{ p: 0.3, height: '100%'}}>
-              {renderTabContent()}
-            </Box>
+                tabPosition="left"
+                >
+              
+              {/* 1st child: Dashboard */}
+              <Box sx={{ p: 0.3, height: '100%' }}>
+                <DashboardTab />
+              </Box>
+
+              {/* 2nd child: Builder */}
+              <Box sx={{ p: 0.3, height: '100%' }}>
+                <BuilderTab />
+              </Box>
+
+              {/* 3rd child: Config */}
+              <Box sx={{ p: 0.3, height: '100%' }}>
+                <ConfigTab />
+              </Box>
+
+              {/* 4th child: Code View */}
+              <Box sx={{ p: 0.3, height: '100%' }}>
+                <CodeTab />
+              </Box>
             </FormBuilderIconTabs>
         </Box>
       </DashboardLayout>
