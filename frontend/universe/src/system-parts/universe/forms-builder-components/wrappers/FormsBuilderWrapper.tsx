@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import DragAndDropCanvas from '../builder/DragAndDropCanvas';
 import SettingsPanel from '../settings/SettingsPanel';
 import { findControlById } from '../utils/controlUtils'; 
@@ -36,8 +36,8 @@ export default function FormsBuilderWrapper() {
   }, [droppedControls]);
 
   return (
-    <Grid container spacing={1} wrap="nowrap" sx={{ height: '100%', overflow: 'hidden' }}>
-      <Grid  item xs={9} sx={{ height: '100%', overflow: 'hidden' }}>
+    <Box display="flex" gap={1} sx={{ height: '100%', overflow: 'hidden' }}>
+      <Box sx={{ flex: 3, height: '100%', overflow: 'hidden' }}>
         <DragAndDropCanvas
           droppedControls={droppedControls}
           setDroppedControls={setDroppedControls}
@@ -46,8 +46,8 @@ export default function FormsBuilderWrapper() {
           isPreview={false}
           setIsPreview={() => {}}
         />
-      </Grid>
-      <Grid item xs={3} sx={{ height: '100%', overflowY: 'auto', backgroundColor: '#f9f9f9' }}>
+      </Box>
+      <Box sx={{ flex: 1, height: '100%', overflowY: 'auto', backgroundColor: '#f9f9f9' }}>
         <SettingsPanel
           selectedControl={selectedControl}
           setDroppedControls={setDroppedControls}
@@ -63,7 +63,7 @@ export default function FormsBuilderWrapper() {
             }
           }}
         />
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 }

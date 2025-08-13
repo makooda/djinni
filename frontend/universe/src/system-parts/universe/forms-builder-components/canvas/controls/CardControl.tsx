@@ -47,12 +47,10 @@ export default function CardControl({ control, children, isRoot }: { control: { 
       elevation={showShadow ? 2 : 0}
         sx={{
             p: 1.5,
-            border: showBorder ? '1px solid #b8c0c9' : 'none',
+            border: showBorder ? '1px solid #c9bdb8ff' : 'none',
             background: background,
             borderRadius: 0.3,
             mb: 1,
-            minwidth: isRoot ? '98%' : '100%', // or 'auto' for children
-            minheight: isRoot ? '100%' : '100%',
             position: 'relative',
             transition: 'box-shadow 0.2s, border 0.2s',
             display: 'flex',

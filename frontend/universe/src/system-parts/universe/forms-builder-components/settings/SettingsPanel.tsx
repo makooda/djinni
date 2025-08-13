@@ -10,6 +10,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  InputAdornment,
 } from '@mui/material';
 import { controlSettingsSchema } from '../schemas/FormControlSettingsSchema'; // Your schema file
 
@@ -63,11 +64,18 @@ export default function SettingsPanel({
   }
 
   const controlType = selectedControl.type;
-  const displayName =
-    displayNames[controlType] ||
-    controlType.charAt(0).toUpperCase() + controlType.slice(1);
-
+  const displayName =    displayNames[controlType] || controlType.charAt(0).toUpperCase() + controlType.slice(1);
   const settingsFields = controlSettingsSchema[controlType] || [];
+
+  const parseValueWithUnit = (value: string = '', units: string[] = []) => {
+      if (!value) return { num: '', unit: units[0] || '' };
+      const match = value.match(/^(\d*\.?\d*)(\D*)$/);
+      let num = match?.[1] || '';
+      let unit = match?.[2] || units[0] || '';
+      // If unit is missing or not in allowed units, fallback
+      if (!units.includes(unit)) unit = units[0] || '';
+      return { num, unit };
+    };
 
   return (
     <Box>
@@ -153,6 +161,67 @@ export default function SettingsPanel({
               </FormControl>
             );
           }
+          // ---- Color Picker ----
+          if (field.type === 'color') {
+            return (
+              <Box key={field.key} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <TextField
+                  label={field.label}
+                  type="color"
+                  value={value || '#ffffff'}
+                  onChange={e => onUpdate({ [field.key]: e.target.value })}
+                  size="small"
+                  sx={{
+                    width: 40,
+                    p: 0,
+                    '& input': { p: 0.5, minWidth: 30, bgcolor: 'transparent', cursor: 'pointer' },
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <Typography sx={{ ml: 2 }}>{value}</Typography>
+              </Box>
+            );
+          }
+          // ---- Text field with units ----
+          if (field.type === 'text' && field.unitOptions && field.unitOptions.length) {
+          // Split value into num/unit
+          let num = '';
+          let unit = field.unitOptions[0];
+          const match = value ? value.match(/^(\d*\.?\d*)(\D*)$/) : null;
+          if (match) {
+            num = match[1] || '';
+            unit = match[2] || field.unitOptions[0];
+            if (!field.unitOptions.includes(unit)) unit = field.unitOptions[0];
+          }
+
+          return (
+            <Box key={field.key} sx={{ display: 'flex', gap: 1, mb: 1 }}>
+              <TextField
+                label={field.label}
+                value={num}
+                type="number"
+                size="small"
+                onChange={e => {
+                  onUpdate({ [field.key]: e.target.value + unit });
+                }}
+                InputLabelProps={{ shrink: true }}
+                sx={{ flex: 1 }}
+              />
+              <FormControl size="small" sx={{ minWidth: 60 }}>
+                <Select
+                  value={unit}
+                  onChange={e => {
+                    onUpdate({ [field.key]: num + e.target.value });
+                  }}
+                >
+                  {field.unitOptions.map(u => (
+                    <MenuItem key={u} value={u}>{u}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          );
+        }
           return null;
         })}
 

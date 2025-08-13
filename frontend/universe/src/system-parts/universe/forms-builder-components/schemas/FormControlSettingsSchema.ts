@@ -3,8 +3,9 @@ export type ControlSettingType = 'text' | 'boolean' | 'select';
 export interface ControlSetting {
   key: string;
   label: string;
-  type: ControlSettingType;
+  type: ControlSettingType | 'color'; 
   options?: string[];
+  unitOptions?: string[];
 }
 
 export const controlSettingsSchema: Record<string, ControlSetting[]> = {
@@ -91,8 +92,29 @@ export const controlSettingsSchema: Record<string, ControlSetting[]> = {
     { key: 'background', label: 'Background Color', type: 'text' },
   ],
   container: [
-    { key: 'title', label: 'Container Title', type: 'text' },
-  ],
+      { key: 'label', label: 'Container Label', type: 'text' },
+      { key: 'subtitle', label: 'Subtitle', type: 'text' },
+      { key: 'showLabel', label: 'Show Label', type: 'boolean' },
+      { key: 'showDivider', label: 'Show Divider', type: 'boolean' },
+      { key: 'direction', label: 'Direction', type: 'select', options: ['row', 'column'] },
+      { key: 'gap', label: 'Gap Between Items', type: 'text' },
+      { key: 'align', label: 'Align Items', type: 'select', options: ['flex-start', 'center', 'flex-end', 'stretch', 'baseline'] },
+      { key: 'justify', label: 'Justify Content', type: 'select', options: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'] },
+      { key: 'wrap', label: 'Wrap', type: 'select', options: ['nowrap', 'wrap', 'wrap-reverse'] },
+      { key: 'padding', label: 'Padding', type: 'text', unitOptions: ['px', '%', 'em', 'rem']},
+      { key: 'margin', label: 'Margin', type: 'text' },
+      { key: 'minHeight', label: 'Min Height', type: 'text' },
+      { key: 'minWidth', label: 'Min Width', type: 'text' },
+      { key: 'maxHeight', label: 'Max Height', type: 'text' },
+      { key: 'maxWidth', label: 'Max Width', type: 'text' },
+      { key: 'border', label: 'Border', type: 'text' },
+      { key: 'borderRadius', label: 'Border Radius', type: 'text' },
+      { key: 'background', label: 'Background Color', type: 'color' },
+      { key: 'boxShadow', label: 'Box Shadow', type: 'text' },
+      { key: 'collapsible', label: 'Collapsible', type: 'boolean' },
+      { key: 'defaultCollapsed', label: 'Collapsed by Default', type: 'boolean' },
+    ],
+
   repeater: [
     { key: 'label', label: 'Repeater Label', type: 'text' },
   ],
