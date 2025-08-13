@@ -25,7 +25,7 @@ export default function ProfileMenu() {
       dispatch(logout());
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
-      navigate('/universe/signin');
+      navigate('/signin');
       handleMenuClose();
       window.location.reload();
     } catch (error) {

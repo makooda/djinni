@@ -15,7 +15,6 @@ import {
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import { PadlockIcon } from './CustomIcons';
 
@@ -86,7 +85,7 @@ export default function ChangePassword(props: { disableCustomTheme?: boolean }) 
     setResponseMessage(''); // Clear any previous message
 
     try {
-      const userServiceBaseUrl = process.env.REACT_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
+      const userServiceBaseUrl = import.meta.env.VITE_APP_USER_MANAGEMENT_SERVICE_BASE_URL;
       const changePasswordEndpoint = 'api/updatepassword/';
 
       interface ChangePasswordResponse {
@@ -109,7 +108,7 @@ export default function ChangePassword(props: { disableCustomTheme?: boolean }) 
 
       // Redirect to dashboard after 3 seconds
       setTimeout(() => {
-        navigate('/universe/dashboard');
+        navigate('/');
       }, 3000);
 
     } catch (error: any) {
@@ -123,7 +122,7 @@ export default function ChangePassword(props: { disableCustomTheme?: boolean }) 
   };
 
   return (
-    <AppTheme {...props} mode="light">
+    <>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <Box sx={{ position: 'fixed', top: '1rem', right: '1rem' }}>
@@ -188,6 +187,6 @@ export default function ChangePassword(props: { disableCustomTheme?: boolean }) 
           </Card>
         </Box>
       </SignInContainer>
-    </AppTheme>
+    </>
   );
 }

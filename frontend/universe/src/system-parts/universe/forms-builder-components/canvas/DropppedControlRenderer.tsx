@@ -31,6 +31,7 @@ import {
 } from '@mui/material';
 import { DroppedControl } from '../wrappers/FormsBuilderWrapper';
 import CardControl from '../canvas/controls/CardControl';
+import ContainerControl from '../canvas/controls/ContainerControl';
 
 type Props = {
   control: DroppedControl;
@@ -214,7 +215,7 @@ export default function DroppedControlRenderer({ control, children }: Props) {
       );
     }
     case 'container': {      
- return <CardControl control={control}>{children}</CardControl>;
+ return <ContainerControl control={control}>{children}</ContainerControl>;
     }
     case 'repeater': {
       return (

@@ -175,32 +175,38 @@ export default function DragAndDropCanvas({
     parentId: string | null = null
   ) => {
     event.preventDefault();
-    event.stopPropagation();
-
-    console.log("Dropping on parentId:", parentId);
+    //event.stopPropagation();
 
     const rawData = event.dataTransfer.getData('text/plain');
     if (!rawData) return;
+        try {
+          const data = JSON.parse(rawData);
+            if (!data.type) return;
 
-    try {
-      const data = JSON.parse(rawData);
-      if (!data.type) return;
+            // Find the container DOM node
+            const containerBox = event.currentTarget.getBoundingClientRect();
+            console.log('Container box:', containerBox);
+            const dropX = event.clientX - containerBox.left;
+            const dropY = event.clientY - containerBox.top;
 
-      const newControl: DroppedControl = {
-        id: `${data.type}-${Date.now()}`,
-        type: data.type,
-        label: data.label,
-        config: {},
-        children: [],
-        ...(parentId ? {} : { position: { x: 50, y: 50 } }),
-      };
-
-      const updated = addControl(droppedControls, parentId, newControl);
-      localStorage.setItem('djinni:droppedControls', JSON.stringify(updated));
-      setDroppedControls(updated);
-    } catch (err) {
-      console.error('Failed to parse dropped data:', err);
-    }
+            const newControl: DroppedControl = {
+              id: `${data.type}-${Date.now()}`,
+              type: data.type,
+              label: data.label,
+              config: {},
+              children: [],
+              ...(parentId ? {} : { position: { x: dropX, y: dropY } }),
+            };
+          
+          // If dropping in a container, don't set position at all, or set relative
+          if (parentId) delete newControl.position;
+          
+          const updated = addControl(droppedControls, parentId, newControl);
+          localStorage.setItem('djinni:droppedControls', JSON.stringify(updated));
+          setDroppedControls(updated);
+        } catch (err) {
+          console.error('Failed to parse dropped data:', err);
+        }
   };
 
   const deleteControlById = (controls: DroppedControl[], id: string): DroppedControl[] => {

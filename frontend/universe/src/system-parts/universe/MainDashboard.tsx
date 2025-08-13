@@ -1,5 +1,4 @@
 import React from 'react';
-import AppTheme from '../../shared-theme/AppTheme';
 import {
   Box,
   Divider,
@@ -29,13 +28,7 @@ const columns = [
   { label: 'Workflow', key: 'workflowType', sortable: true },
 ];
 
-const rows = Array.from({ length: 42 }, (_, i) => ({
-  id: i + 1,
-  name: `User ${i + 1}`,
-  email: `user${i + 1}@mail.com`,
-  role: i % 2 === 0 ? 'Admin' : 'Viewer',
-  status: i % 3 === 0 ? 'Active' : 'Pending',
-}));
+// removed unused mock rows in favor of mockRows import
 
 
 
@@ -69,7 +62,6 @@ export default function MainDashboard() {
   
 
   return (
-    <AppTheme mode="light">
       <DashboardLayout>
         
         <Box height={{ xs: 'auto', sm: '100%' }}>
@@ -183,6 +175,5 @@ export default function MainDashboard() {
           </SectionBox>
         </Box>
       </DashboardLayout>
-    </AppTheme>
   );
 }

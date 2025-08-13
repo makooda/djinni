@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import AppTheme from '../../shared-theme/AppTheme';
 import {
   Box,
   Divider,
@@ -50,13 +49,12 @@ const renderTabContent = () => {
   };
 
   return (
-    <AppTheme mode="light">
       <DashboardLayout>
         
         <BreadcrumbsBar
             items={[
                 { label: 'Home', path: '/' },
-                { label: 'Admin. Workbench' , path: '/universe/admin-workbench' },
+                { label: 'Admin. Workbench' , path: '/admin-workbench' },
                 { label: 'Forms Builder' }, // current page (no path)
             ]}
             />
@@ -93,6 +91,5 @@ const renderTabContent = () => {
             </FormBuilderIconTabs>
         </Box>
       </DashboardLayout>
-    </AppTheme>
   );
 }

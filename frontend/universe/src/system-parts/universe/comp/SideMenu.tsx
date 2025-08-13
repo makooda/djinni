@@ -72,7 +72,7 @@ const menuStructure: MenuSection[] = [
       {
         label: 'Forms Studio',
         icon: <DescriptionOutlined />,
-        path: '/universe/admin-workbench/forms-builder',
+        path: '/admin-workbench/forms-builder',
       },
     ],
   },

@@ -16,7 +16,6 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { loginSuccess, loginFailure } from '../../store/authSlice';
-import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import { PadlockIcon } from './CustomIcons';
 
@@ -119,7 +118,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   };
 
   return (
-    <AppTheme {...props} mode="light">
+    <>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <Box sx={{ position: 'fixed', top: '1rem', right: '1rem' }}>
@@ -236,6 +235,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Card>
         </Box>
       </SignInContainer>
-    </AppTheme>
+    </>
   );
 }
